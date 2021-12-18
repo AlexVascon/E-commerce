@@ -51,10 +51,15 @@ export const update = async (req, res, next) => {
 
 export const remove = async (req, res, next) => {
     try {
-      const user = await User.findById(req.user._id);
-      await user.remove();
-      res.send({ message: 'User removed' });
+      const user = await User.findById(req.user._id)
+      await user.remove()
+      res.send({ message: 'User removed' })
     } catch (err) {
       next(err)
     }
+}
+
+export const verify = async (req, res) => {
+  const user = req.user
+  res.status(200).send(user)
 };

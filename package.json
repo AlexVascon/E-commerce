@@ -1,0 +1,12 @@
+{
+  "name": "e-commerce-new",
+  "version": "1.0.0",
+  "description": "web shop",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Vasconcelos de Almeida",
+  "license": "ISC",
+  "type": "module"
+}

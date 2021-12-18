@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost/server'
+const MONGO_URI = (`${process.env.MONGODB_URI}/${process.env.MONGODB_NAME}`) || 'mongodb://localhost/server'
 
 mongoose
   .connect(MONGO_URI)

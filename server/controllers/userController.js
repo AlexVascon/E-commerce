@@ -42,9 +42,19 @@ export const update = async (req, res, next) => {
     user.email = req.body.email || user.email
     user.password = req.body.password || user.password
 
-    await user.save();
+    await user.save()
     res.status(200).send({message: 'update successful'})
   } catch (err) {
-    next(err);
+    next(err)
   }
+}
+
+export const remove = async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user._id);
+      await user.remove();
+      res.send({ message: 'User removed' });
+    } catch (err) {
+      next(err)
+    }
 };

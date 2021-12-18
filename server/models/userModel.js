@@ -16,7 +16,11 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: [true, 'username cant be empty.']
-    }
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema(
     },
     quantity: {
       type: Number,
-      required: [true, 'quantity cant be empty.']
+      default: 0
     },
     reviews: [String],
     rating: {

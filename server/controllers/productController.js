@@ -19,6 +19,15 @@ export const createProduct = async (req,res,next) => {
   }
 }
 
+export const deleteProduct = async (req,res,next) => {
+  try {
+    const deleted = await Product.findByIdAndDelete(req.params._id)
+    res.status(200).send({message: 'deleted'})
+  } catch (err) {
+    next(err)
+  }
+}
+
 // example request: url/category?selection=women&category=shirt&page=1&limit=7
 export const category = async (req,res, next) => {
   try {

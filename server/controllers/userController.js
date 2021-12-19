@@ -1,6 +1,7 @@
 import User from '../models/userModel.js'
 import bcrypt from 'bcrypt'
 import {generateAccessToken} from '../utils/generateToken.js'
+import Cart from '../models/cartModel.js'
 
 // register
 export const createUser = async (req,res,next) => {
@@ -13,6 +14,8 @@ export const createUser = async (req,res,next) => {
       password: password
     })
     await user.save()
+    const cart = await new Cart({userId: user._id})
+    await cart.save()
     res.status(200).send(user)
   } catch (err) {
     next(err)

@@ -30,3 +30,27 @@ export const addItemToCart = async (req, res, next) => {
     next(err)
   }
 }
+
+export const removeCartItem = async (req,res, next) => {
+  try {
+    const { itemId } = req.params
+    const cart = await Cart.findOne({ userId: req.user._id })
+    const removeIndex = cart.items.findIndex(item => item.itemId === itemId)
+    const itemAtIndex = cart.items[removeIndex]
+    if(itemAtIndex.quantity > 1) {
+      const updatedItemQuantity = cart.items.map(item => {
+        if(item.itemId === itemId) item.quantity -= 1
+        return item
+      })
+      cart.items = updatedItemQuantity
+      cart.totalCost -= itemAtIndex.price
+    } else {
+      const removedItem = cart.items.splice(removeIndex, 1)[0]
+      cart.totalCost -= removedItem.price
+    }
+    await cart.save()
+    res.status(200).send(cart)
+  } catch(err) {
+    next(err)
+  }
+}

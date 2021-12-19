@@ -4,31 +4,31 @@ const productSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, 'title cant be empty.']
     },
     price: {
       type: Number,
-      required: true 
+      required: [true, 'price cant be empty.']
     },
     category: {
       type: String,
-      required: true 
+      required: [true, 'category cant be empty.']
     },
     description: {
       type: String,
-      required: true 
+      required: [true, 'description cant be empty.']
     },
     image: {
       type: String,
-      required: true 
+      required: [true, 'image cant be empty.'] 
     },
     selection: {
       type: String,
-      required: true
+      required: [true, 'selection cant be empty.']
     },
     quantity: {
       type: Number,
-      required: true
+      required: [true, 'quantity cant be empty.']
     },
     reviews: [String],
     rating: {

@@ -67,6 +67,8 @@ export const deleteUser = async (req, res, next) => {
     }
 }
 
+// requires a query
+// example request: BASE_URL/users/all?page=1&limit=8
 export const fetchAllUsers = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1

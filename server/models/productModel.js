@@ -41,7 +41,7 @@ const productSchema = new mongoose.Schema(
   }
 )
 
-productSchema.methods.calculateRatingAverage = async function(newRating) {
+productSchema.methods.calculateNewRatingAverage = async function(newRating) {
   if(this.rating === 0 && this.reviews.length === 0) return this.rating * this.reviews.length
   const oldAverage = this.rating 
   const newAverage = oldAverage + ((newRating - oldAverage) / this.reviews.length )

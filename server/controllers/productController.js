@@ -1,4 +1,5 @@
 import Product from '../models/productModel.js'
+import Review from '../models/reviewModel.js'
 
 export const createProduct = async (req,res,next) => {
   try {
@@ -102,6 +103,21 @@ export const editProduct = async (req,res,next) => {
     product.quantity = req.body.quantity || product.quantity
     await product.save()
     res.status(200).send({message: 'update successful'})
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const createProductReview = async (req,res, next) => {
+  try {
+    const {productId, rating, description } = req.body
+    const review = await new Review({productId: productId, rating: rating, description: description, userId: req.user._id })
+    await review.save()
+    const product = await Product.findById(productId)
+    product.reviews.push(review._id)
+    await product.calculateNewRatingAverage(review.rating)
+    await product.save()
+    res.status(200).send({message: 'created new review'})
   } catch (err) {
     next(err)
   }

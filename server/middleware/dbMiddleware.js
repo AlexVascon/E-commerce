@@ -28,8 +28,11 @@ const handleSchemaValidationError = (err, res, req) => {
 
 export default (err, req, res, next) => {
   try {
-    if (err.name === "DocumentNotFoundError")
-      return res.status(404).send({ message: "user not found" })
+    if (err.name === "DocumentNotFoundError") {
+      let modelName = err.message.split('model')[1]
+      modelName = modelName.replace(/["]+/g, '') // remove backslashes
+      return res.status(404).send({ message:  `${modelName} not found` })
+    }
     if (err.name === "ValidationError")
       return (err = handleSchemaValidationError(err, res, req))
     if (err.code && err.code == 11000)

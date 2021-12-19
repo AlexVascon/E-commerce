@@ -125,7 +125,7 @@ export const createProductReview = async (req,res, next) => {
 
 // requires a query
 // example request: BASE_URL/products/reviews?&productId=1234567890&page=1&limit=8
-export const allReviews = async (req,res,next) => {
+export const fetchAllReviews = async (req,res,next) => {
   try {
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit)

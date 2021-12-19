@@ -8,7 +8,8 @@ import {
   fetchProductSuggestions,
   fetchAllProducts,
   editProduct,
-  createProductReview
+  createProductReview,
+  fetchAllReviews
 } from '../controllers/productController.js'
 import {authenticateToken, admin} from '../middleware/authMiddleware.js'
 
@@ -17,6 +18,7 @@ router.get('/delete', authenticateToken, admin, deleteProduct)
 router.post('/create', authenticateToken, admin, createProduct)
 router.post('/edit', authenticateToken, admin, editProduct)
 router.post('/review', authenticateToken, createProductReview)
+router.get('/reviews/all', fetchAllReviews)
 router.get('/:productId', fetchProductDetails)
 router.get('/suggestions/:productId', fetchProductSuggestions)
 router.get('/all', authenticateToken, admin, fetchAllProducts)

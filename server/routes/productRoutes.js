@@ -1,13 +1,13 @@
 import express from 'express'
 const router = express.Router()
-import {category, createProduct, deleteProduct, productDetails, suggestions, allProducts} from '../controllers/productController.js'
+import {fetchProducts, createProduct, deleteProduct, fetchProductDetails, fetchProductSuggestions, fetchAllProducts} from '../controllers/productController.js'
 import {authenticateToken, admin} from '../middleware/authMiddleware.js'
 
-router.get('/category', category)
+router.get('/category', fetchProducts)
 router.get('/delete', admin, deleteProduct)
 router.post('/create', admin, createProduct)
-router.get('/:itemId', productDetails)
-router.get('/suggestions/:selection/:category/:itemId', suggestions)
-router.get('/all', authenticateToken, admin, allProducts)
+router.get('/:productId', fetchProductDetails)
+router.get('/suggestions/:productId', fetchProductSuggestions)
+router.get('/all', authenticateToken, admin, fetchAllProducts)
 
 export default router

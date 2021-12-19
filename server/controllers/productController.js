@@ -21,15 +21,16 @@ export const createProduct = async (req,res,next) => {
 
 export const deleteProduct = async (req,res,next) => {
   try {
-    const deleted = await Product.findByIdAndDelete(req.params._id)
+    await Product.findByIdAndDelete(req.params._id)
     res.status(200).send({message: 'deleted'})
   } catch (err) {
     next(err)
   }
 }
 
-// example request: url/category?selection=women&category=shirt&page=1&limit=7
-export const category = async (req,res, next) => {
+// requires a query
+// example request: BASE_URL/products/category?selection=women&category=shirt&page=1&limit=7
+export const fetchProducts = async (req,res, next) => {
   try {
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit)
@@ -51,34 +52,36 @@ export const category = async (req,res, next) => {
         limit: limit
       }
     }
-    const items = await Product.find({selection: req.query.selection, category: req.query.category}).limit(limit).skip(startIndex).exec()
-    res.status(200).send({items: items, count: allProducts.length, page: page })
+    const products = await Product.find({selection: req.query.selection, category: req.query.category}).limit(limit).skip(startIndex).exec()
+    res.status(200).send({products: products, count: allProducts.length, page: page })
   } catch (err) {
     next(err)
   }
 }
 
-export const productDetails = async (req,res, next) => {
+export const fetchProductDetails = async (req,res, next) => {
   try {
-    const {itemId} = req.params
-    const item = await Product.findOne({_id: itemId}).lean().orFail()
-    res.status(200).send(item)
+    const {productId} = req.params
+    const product = await Product.findOne({_id: productId}).lean().orFail()
+    res.status(200).send(product)
   } catch (err) {
     next(err)
   }
 }
 
-export const suggestions = async (req,res, next) => {
+// similar products based on current viewed product in browser
+export const fetchProductSuggestions = async (req,res, next) => {
   try {
-    const {selection, category, itemId} = req.params
-    const items = await Product.find({selection: selection, category: category, _id: {$ne: itemId}}).lean().limit(5)
-    res.status(200).send(items)
+    const {productId} = req.params
+    const product = await Product.findById(productId).lean()
+    const products = await Product.find({selection: product.selection, category: product.category, _id: {$ne: productId}}).lean().limit(5)
+    res.status(200).send(products)
   } catch (err) {
     next(err)
   }
 }
 
-export const allProducts = async (req,res,next) => {
+export const fetchAllProducts = async (req,res,next) => {
   try {
     const products = await Product.find().lean()
     res.status(200).send(products)

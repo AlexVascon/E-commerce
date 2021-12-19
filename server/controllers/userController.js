@@ -2,7 +2,8 @@ import User from '../models/userModel.js'
 import bcrypt from 'bcrypt'
 import {generateAccessToken} from '../utils/generateToken.js'
 
-export const register = async (req,res,next) => {
+// register
+export const createUser = async (req,res,next) => {
   try {
     const {username, email, password, confirmPassword} = req.body
     if(password !== confirmPassword) return res.status(400).send({message: 'passwords dont match.'})
@@ -18,7 +19,8 @@ export const register = async (req,res,next) => {
   }
 }
 
-export const login = async (req,res,next) => {
+// login
+export const fetchUser = async (req,res,next) => {
   try {
     const {usernameOrEmail, password} = req.body
     const searchCriteria = await usernameOrEmail.includes('@') ? 'email' : 'username'
@@ -35,7 +37,7 @@ export const login = async (req,res,next) => {
   }
 }
 
-export const update = async (req, res, next) => {
+export const editUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
     user.username = req.body.username || user.username
@@ -49,10 +51,10 @@ export const update = async (req, res, next) => {
   }
 }
 
-export const remove = async (req, res, next) => {
+export const deleteUser = async (req, res, next) => {
   const { userId } = req.params
   if (req.user._id !== userId && !req.user.isAdmin) res.status(403).send('you are not authorised')
-  
+
     try {
       const user = await User.findById(req.user._id)
       await user.remove()
@@ -62,7 +64,7 @@ export const remove = async (req, res, next) => {
     }
 }
 
-export const allUsers = async (req, res, next) => {
+export const fetchAllUsers = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit)
@@ -91,7 +93,7 @@ export const allUsers = async (req, res, next) => {
   }
 };
 
-export const verify = async (req, res) => {
+export const verifyUser = async (req, res) => {
   const user = req.user
   res.status(200).send(user)
 }

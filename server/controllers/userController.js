@@ -50,6 +50,9 @@ export const update = async (req, res, next) => {
 }
 
 export const remove = async (req, res, next) => {
+  const { userId } = req.params
+  if (req.user._id !== userId && !req.user.isAdmin) res.status(403).send('you are not authorised')
+  
     try {
       const user = await User.findById(req.user._id)
       await user.remove()
@@ -84,7 +87,7 @@ export const allUsers = async (req, res, next) => {
     const users = await User.find().limit(limit).skip(startIndex).exec()
     res.status(200).send(users)
   } catch (err) {
-    next(err);
+    next(err)
   }
 };
 

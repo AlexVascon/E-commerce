@@ -51,8 +51,8 @@ export const category = async (req,res, next) => {
         limit: limit
       }
     }
-    const categoryItems = await Product.find({selection: req.query.selection, category: req.query.category}).limit(limit).skip(startIndex).exec()
-    res.status(200).send({items: categoryItems, count: allProducts.length, page: page })
+    const items = await Product.find({selection: req.query.selection, category: req.query.category}).limit(limit).skip(startIndex).exec()
+    res.status(200).send({items: items, count: allProducts.length, page: page })
   } catch (err) {
     next(err)
   }
@@ -61,8 +61,8 @@ export const category = async (req,res, next) => {
 export const productDetails = async (req,res, next) => {
   try {
     const {itemId} = req.params
-    const itemDetails = await Product.findOne({_id: itemId}).lean().orFail()
-    res.status(200).send({details: itemDetails})
+    const item = await Product.findOne({_id: itemId}).lean().orFail()
+    res.status(200).send(item)
   } catch (err) {
     next(err)
   }
@@ -72,7 +72,7 @@ export const suggestions = async (req,res, next) => {
   try {
     const {selection, category, itemId} = req.params
     const items = await Product.find({selection: selection, category: category, _id: {$ne: itemId}}).lean().limit(5)
-    res.status(200).send({suggestions: items})
+    res.status(200).send(items)
   } catch (err) {
     next(err)
   }

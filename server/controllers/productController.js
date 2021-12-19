@@ -1,5 +1,24 @@
 import Product from '../models/productModel.js'
 
+export const createProduct = async (req,res,next) => {
+  try {
+    const {title, imageURL, description, price, quantity, selection, category} = req.body
+    const newProduct = await new Product({
+      title: title, 
+      image: imageURL, 
+      description: description,
+      price: price,
+      quantity: quantity, 
+      selection: selection, 
+      category: category
+    })
+    await newProduct.save()
+    res.status(201).send({message: 'added succefully '})
+  } catch (err) {
+    next(err)
+  }
+}
+
 // example request: url/category?selection=women&category=shirt&page=1&limit=7
 export const category = async (req,res, next) => {
   try {

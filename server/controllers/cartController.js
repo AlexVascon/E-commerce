@@ -54,3 +54,12 @@ export const removeCartItem = async (req,res, next) => {
     next(err)
   }
 }
+
+export const fetchCartItems = async (req,res, next) => {
+  try {
+    const cart = await Cart.findOne({ userId: req.user._id }).lean()
+    res.status(200).send(cart)
+  } catch (err) {
+    next(err)
+  }
+}

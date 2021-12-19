@@ -4,10 +4,17 @@ const errorLogger = (error, fields, path) => {
   console.error("\x1b[31m", "Path: ", path)
 }
 
+const modelOfDuplicateError = (err) => {
+return err.message.split('.')[1].split(' ')[0] // db.collection ... -> [db, collection ...] -> [collection, ...] -> collection
+}
+
 const handleDuplicateKeyError = (err, res, req) => {
+  const model = modelOfDuplicateError(err)
   const field = Object.keys(err.keyValue)
   const code = 409
-  const error = `An account with that ${field} already exists.`
+  let error
+  if(model === 'reviews') error = 'cannot write more than one review.'
+  if(model === 'users') error = `An account with that ${field} already exists.`
   errorLogger(error, field, req.path)
   res.status(code).send({ messages: error, fields: field })
 };
@@ -26,12 +33,16 @@ const handleSchemaValidationError = (err, res, req) => {
   res.status(code).send({ messages: errors, fields: fields })
 }
 
+const modelOfDocumentNotFoundError = (err) => {
+  let modelName = err.message.split('model')[1]
+  return modelName.replace(/["]+/g, '') // remove backslashes: "\ "collection" \" -> collection
+}
+
 export default (err, req, res, next) => {
   try {
     if (err.name === "DocumentNotFoundError") {
-      let modelName = err.message.split('model')[1]
-      modelName = modelName.replace(/["]+/g, '') // remove backslashes
-      return res.status(404).send({ message:  `${modelName} not found` })
+      const model = modelOfDocumentNotFoundError(err)
+      return res.status(404).send({ message:  `${model} not found` })
     }
     if (err.name === "ValidationError")
       return (err = handleSchemaValidationError(err, res, req))

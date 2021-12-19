@@ -57,3 +57,13 @@ export const category = async (req,res, next) => {
     next(err)
   }
 }
+
+export const productDetails = async (req,res, next) => {
+  try {
+    const {itemId} = req.params
+    const itemDetails = await Product.findOne({_id: itemId}).lean().orFail()
+    res.status(200).send({details: itemDetails})
+  } catch (err) {
+    next(err)
+  }
+}

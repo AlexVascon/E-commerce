@@ -122,3 +122,34 @@ export const createProductReview = async (req,res, next) => {
     next(err)
   }
 }
+
+// requires a query
+// example request: BASE_URL/products/reviews?&productId=1234567890&page=1&limit=8
+export const allReviews = async (req,res,next) => {
+  try {
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit)
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+
+    const allReviews = await Review.find({productId: req.query.productId}).lean()
+    if(endIndex < allReviews.length) {
+      results.next = {
+        page: page + 1,
+        limit: limit
+      }
+    }
+
+    if(startIndex > 0) {
+      results.previous = {
+        page: page - 1,
+        limit: limit
+      }
+    }
+    const reviews = await Review.find({productId: req.query.productId}).limit(limit).skip(startIndex).exec()
+    res.status(200).send({reviews: reviews, count: allReviews.length, page: page })
+  } catch (err) {
+    next(err)
+  }
+}

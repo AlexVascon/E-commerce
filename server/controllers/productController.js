@@ -89,3 +89,20 @@ export const fetchAllProducts = async (req,res,next) => {
     next(err)
   }
 }
+
+export const editProduct = async (req,res,next) => {
+  try {
+    const product = await Product.findById(req.body.productId)
+    product.title = req.body.title || product.title
+    product.price = Number(req.body.price) || product.price
+    product.category = req.body.category || product.category
+    product.description = req.body.description || product.description
+    product.image = req.body.image || product.image
+    product.selection = req.body.selection || product.selection
+    product.quantity = req.body.quantity || product.quantity
+    await product.save()
+    res.status(200).send({message: 'update successful'})
+  } catch (err) {
+    next(err)
+  }
+}

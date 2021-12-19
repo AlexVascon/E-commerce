@@ -77,3 +77,12 @@ export const suggestions = async (req,res, next) => {
     next(err)
   }
 }
+
+export const allProducts = async (req,res,next) => {
+  try {
+    const products = await Product.find().lean()
+    res.status(200).send(products)
+  } catch (err) {
+    next(err)
+  }
+}

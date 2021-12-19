@@ -67,3 +67,13 @@ export const productDetails = async (req,res, next) => {
     next(err)
   }
 }
+
+export const suggestions = async (req,res, next) => {
+  try {
+    const {selection, category, itemId} = req.params
+    const items = await Product.find({selection: selection, category: category, _id: {$ne: itemId}}).lean().limit(5)
+    res.status(200).send({suggestions: items})
+  } catch (err) {
+    next(err)
+  }
+}

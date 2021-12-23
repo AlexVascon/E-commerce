@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { authenticate } from '../actions/userActions'
 import styled from 'styled-components'
 import MenuIcon from '@mui/icons-material/Menu'
 import Drawer from '@mui/material/Drawer'
@@ -41,6 +43,8 @@ font-size: 2rem;
 `
 
 export default function Navbar() {
+  const dispatch = useDispatch()
+  const {verified} = useSelector((state) => state.authenticate)
   const [open, setOpen] = useState(false)
   const toggleNavMenu = (state) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -48,6 +52,10 @@ export default function Navbar() {
     }
     setOpen(state)
   }
+
+  useEffect(() => {
+    dispatch(authenticate())
+  }, [dispatch])
 
   return (
     <Nav>
@@ -59,8 +67,8 @@ export default function Navbar() {
             onClose={toggleNavMenu(false)}
           >
       <List>
-        <NavLink to='/portal'>Portal</NavLink>
-        <NavLink to='/account'>Account</NavLink>
+        {!verified && <NavLink to='/portal'>Portal</NavLink> }
+        {verified && <NavLink to='/account'>Account</NavLink>} 
         <NavLink to='/about'>About</NavLink>
       </List> 
       </Drawer>

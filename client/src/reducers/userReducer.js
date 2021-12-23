@@ -5,6 +5,12 @@ import {
   AUTHENTICATION_REQUEST,
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAIL,
+  SAVE_SHIPPING_REQUEST,
+  SAVE_SHIPPING_SUCCESS,
+  SAVE_SHIPPING_FAIL,
+  FETCH_SHIPPING_REQUEST,
+  FETCH_SHIPPING_SUCCESS,
+  FETCH_SHIPPING_FAIL
 } from '../constants/userConstants'
 
 export const registerReducer = (state = {}, action) => {
@@ -28,6 +34,32 @@ export const authenticationReducer = (state = {}, action) => {
       return { authenticationLoading: false, verified: action.payload }
     case AUTHENTICATION_FAIL:
       return { authenticationLoading: false, authenticationError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const saveShippingInformationReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SAVE_SHIPPING_REQUEST:
+      return { loadingSaveShipping: true }
+    case SAVE_SHIPPING_SUCCESS:
+      return { loadingSaveShipping: false, status: action.payload }
+    case SAVE_SHIPPING_FAIL:
+      return { loadingSaveShipping: false, saveShippingInformationError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const fetchShippingInformationReducer = (state = {}, action) => {
+  switch (action.type) {
+    case FETCH_SHIPPING_REQUEST:
+      return { fetchShippingInformationLoading: true }
+    case FETCH_SHIPPING_SUCCESS:
+      return { fetchShippingInformationLoading: false, shippingInformation: action.payload }
+    case FETCH_SHIPPING_FAIL:
+      return { fetchShippingInformationLoading: false, fetchShippingInformationError: action.payload }
     default:
       return state
   }

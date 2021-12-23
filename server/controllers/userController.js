@@ -2,12 +2,13 @@ import User from '../models/userModel.js'
 import bcrypt from 'bcrypt'
 import {generateAccessToken} from '../utils/generateToken.js'
 import Cart from '../models/cartModel.js'
+import Shipping from '../models/shippingModel.js'
 
 // register
 export const createUser = async (req,res,next) => {
   try {
     const {username, email, password, confirmPassword} = req.body
-    if(password !== confirmPassword) return res.status(400).send({message: 'passwords dont match.'})
+    if(password !== confirmPassword) return res.status(400).send({messages: 'passwords dont match.'})
     const user = await new User({
       username: username,
       email: email,
@@ -16,7 +17,12 @@ export const createUser = async (req,res,next) => {
     await user.save()
     const cart = await new Cart({userId: user._id})
     await cart.save()
-    res.status(200).send(user)
+    const payload = {
+      username: user.username,
+      _id: user._id,
+    }
+    const accessToken = generateAccessToken(payload)
+    res.status(200).send(accessToken)
   } catch (err) {
     next(err)
   }
@@ -101,4 +107,50 @@ export const fetchAllUsers = async (req, res, next) => {
 export const verifyUser = async (req, res) => {
   const user = req.user
   res.status(200).send(user)
+}
+
+export const saveUserShippingInformation = async (req,res, next) => {
+  try {
+    let shipping = await Shipping.findOne({userId: req.user._id})
+    if(shipping) {
+      shipping.information = {
+        fullName: req.body.fullName || shipping.information.fullName,
+        phoneNumber: req.body.phoneNumber || shipping.information.phoneNumber,
+        email: req.body.email || shipping.information.email,
+        country: req.body.country || shipping.information.country,
+        city: req.body.city || shipping.information.city,
+        province: req.body.province || shipping.information.province,
+        postCode: req.body.postCode || shipping.information.postCode,
+        streetAddress: req.body.streetAddress || shipping.information.streetAddress
+      }
+      await shipping.save()
+      return res.status(200).send({message: 'updated shipping information.'})
+    }
+    shipping = await new Shipping({
+      userId: req.user._id,
+      information: {
+        fullName: req.body.fullName,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        country: req.body.country,
+        city: req.body.city,
+        province: req.body.province,
+        postCode: req.body.postCode,
+        streetAddress: req.body.streetAddress
+      } 
+    })
+    await shipping.save()
+    res.status(200).send({message: 'saved shipping information.'})
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const fetchShippingInformation = async (req,res, next) => {
+  try {
+    const shipping = await Shipping.findOne({userId: req.user._id})
+    res.status(200).send(shipping.information)
+  } catch (err) {
+    next(err)
+  }
 }

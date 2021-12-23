@@ -2,6 +2,9 @@ import {
   REGISTRATION_REQUEST,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
   AUTHENTICATION_REQUEST,
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAIL,
@@ -21,6 +24,19 @@ export const registerReducer = (state = {}, action) => {
       return { registerLoading: false, registeredUser: action.payload }
     case REGISTER_FAIL:
       return { registerLoading: false, registerError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const loginReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LOGIN_REQUEST:
+      return { loadingLogin: true }
+    case LOGIN_SUCCESS:
+      return { loadingLogin: false, loggedUser: action.payload }
+    case LOGIN_FAIL:
+      return { loadingLogin: false, loginError: action.payload }
     default:
       return state
   }

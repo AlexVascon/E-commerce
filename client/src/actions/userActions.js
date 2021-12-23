@@ -3,6 +3,9 @@ import {
   REGISTRATION_REQUEST,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
   AUTHENTICATION_REQUEST,
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAIL,
@@ -32,6 +35,28 @@ export const register = (username, email, password, confirmPassword) => async (d
     })
   }
 }
+
+export const login = (usernameOrEmail, password) => async (dispatch) => {
+  try {
+    dispatch({type: LOGIN_REQUEST})
+    const body = { 
+      usernameOrEmail: usernameOrEmail, 
+      password: password 
+    }
+    const { data } = await instance.post('/user/login',body)
+    localStorage.setItem('accessToken', data)
+    const validationToken = await instance.get('/user/verify')
+    dispatch({ type: LOGIN_SUCCESS, payload: validationToken })
+  } catch (error) {
+    dispatch({
+      type: LOGIN_FAIL,
+      payload:
+        error.response && error.response.data.messages
+          ? error.response.data.messages
+          : error.messages,
+    });
+  }
+};
 
 export const authenticate = () => async (dispatch) => {
   try {

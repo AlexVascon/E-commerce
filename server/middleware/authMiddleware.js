@@ -13,7 +13,6 @@ export const authenticateToken = async (req, res, next) => {
       req.user = await User.findById(decoded._id).select('-password')
       next()
     } catch (err) {
-      console.log(err)
       res.status(401)
       throw new Error('Not authorized, token fail')
     }

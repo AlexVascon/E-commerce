@@ -25,7 +25,7 @@ export const addItemToCart = async (req, res, next) => {
       cart.totalCost += product.price
     }
     await cart.save()
-    res.status(200).send(cart)
+    res.status(200).send({message: 'added cart item'})
   } catch (err) {
     next(err)
   }

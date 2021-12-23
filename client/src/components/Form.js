@@ -15,7 +15,7 @@ export const Input = styled.input`
 @media(min-width: 400px) {
   padding: 1rem 1.4rem;
 }
-  padding: 1rem 0rem;
+  padding: 1rem;
   border: none;
   color: white;
   border-radius: .3rem;

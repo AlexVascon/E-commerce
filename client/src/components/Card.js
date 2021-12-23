@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 import cardBackgroundImg from '../assets/donught_corner_img.jpg'
+import { Link } from 'react-router-dom'
 
-const Container = styled.div`
+const Container = styled(Link)`
 background-image: url(${cardBackgroundImg});
   background-size: cover;
   background-repeat: no-repeat;
-  width: 9.5rem;
+  width: 80%;
+  height: 22rem;
   display: flex;
   justify-content: flex-end;
-  height: 12rem;
   flex-direction: column;
   margin: 1rem .4rem;
   border-radius: 0.5rem;
@@ -35,8 +36,8 @@ background-image: url(${cardBackgroundImg});
 
 const Title = styled.h1`
  color: rgb(207, 159, 0);
-  font-size: 2rem;
-  line-height: 1.8rem;
+  font-size: 3rem;
+  line-height: 2.7rem;
   padding-left: .5rem;
   width: 90%;
   align-self: center;
@@ -44,15 +45,16 @@ const Title = styled.h1`
   position: absolute;
   bottom: 10%;
   font-family: 'Roboto', sans-serif;
+  overflow-wrap: break-word;
 `
 
 const Price = styled.p`
 font-weight: 700;
   font-style: bold;
-  font-size: .9rem;
-  margin-left: .5rem;
+  font-size: 1.2rem;
+  margin-left: 1rem;
   margin-right: auto;
-  padding: .2rem .5rem;
+  padding: .2rem .8rem;
   color: white;
   border-radius: 2rem;
   background-color: rgba(82, 81, 81, 0.788);

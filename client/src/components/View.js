@@ -22,7 +22,6 @@ export const ViewResponsive = styled(ViewValues)`
   justify-content: center
 }
 `
-
 const SectionValues = styled.div`
 position: relative;
 width: 100%;
@@ -62,10 +61,21 @@ export const Row = styled.li`
 width: 90%;
 margin: auto;
 display: flex;
-justify-content: space-around;
+align-items: center;
+justify-content: space-between;
 border-bottom: 1px solid rgba(128, 128, 128, 0.363);
+`
+export const RowResponsive = styled(Row)`
+flex-direction: column;
 `
 export const RowText = styled.p`
 margin-top: .5rem;
 margin-bottom: .5rem;
+`
+export const Error = styled.p`
+ color: white;
+  border: none;
+  outline: none;
+  padding: 1rem;
+  background-color: rgba(253, 163, 249, 0.582);
 `

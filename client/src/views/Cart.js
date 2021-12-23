@@ -56,7 +56,11 @@ export default function Cart() {
         </CartItem.CostRow>
         <CartItem.CostRow>
           <CartItem.RowText>Delivery</CartItem.RowText>
-          <CartItem.RowText onClick={() => navigate('/shipping')}>Edit shipping</CartItem.RowText>
+          {shippingInformation ?
+          <EditShipping onClick={() => navigate('/shipping')}>Edit Shipping</EditShipping>
+          :
+          <AddShipping onClick={() => navigate('/shipping')}>Add shipping</AddShipping>
+          }
         </CartItem.CostRow>
         {(!cart?.items?.length || !shippingInformation) ?
           <Button disabled>CHECKOUT</Button>
@@ -75,4 +79,10 @@ const Title = styled.h1`
   font-weight: 700;
   color: rgba(235, 198, 36, 0.945);
   font-size: 1rem;
+`
+const AddShipping = styled(CartItem.RowText)`
+color: red;
+`
+const EditShipping = styled(CartItem.RowText)`
+color: blue;
 `

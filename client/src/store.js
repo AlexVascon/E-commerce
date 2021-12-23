@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { fetchProductsReducer, fetchProductInformationReducer, fetchProductReviewsReducer, createProductReviewReducer } from './reducers/productReducer'
 import { registerReducer, authenticationReducer, saveShippingInformationReducer, fetchShippingInformationReducer, loginReducer } from './reducers/userReducer'
-import { addItemToCartReducer } from './reducers/cartReducer'
+import { addItemToCartReducer, fetchCartItemsReducer, removeCartItemReducer } from './reducers/cartReducer'
 
 const reducer = combineReducers({
   fetchProducts: fetchProductsReducer,
@@ -16,6 +16,8 @@ const reducer = combineReducers({
   fetchProductReviews: fetchProductReviewsReducer,
   createProductReview: createProductReviewReducer,
   addItemToCart: addItemToCartReducer,
+  fetchCartItems: fetchCartItemsReducer,
+  removeCartItem: removeCartItemReducer,
 })
 const initialState = {}
 

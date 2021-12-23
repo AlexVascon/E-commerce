@@ -40,7 +40,7 @@ const Item = styled.div`
 `
 const Image = styled.img`
   width: 50%;
-  object-position: 50% 2rem;
+  object-position: 50%;
 `
 
 const ImageContainer = styled.div`
@@ -58,7 +58,6 @@ const DescriptionContainer = styled.div`
 position: relative;
 flex: 3;
 `
-
 const Title = styled.h4`
 position: absolute;
   bottom: 40%;
@@ -94,6 +93,11 @@ const Button = styled.button`
   font-size: 2rem;
   border: none;
   color: rgba(94, 94, 94, 0.637);
+`
+const Quantity = styled.h4`
+  flex: 1;
+  margin: 0;
+  color: rgba(235, 198, 36, 0.945);
 `
 const CostList = styled.ul`
 flex: 1;
@@ -149,7 +153,8 @@ const CartItem = {
   Button,
   CostList,
   CostRow,
-  RowText
+  RowText,
+  Quantity
 }
 
 export default CartItem

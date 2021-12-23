@@ -1,32 +1,54 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import { fetchCartItems, addItemToCart, removeFromCart } from '../actions/cartActions'
+import { fetchShippingInformation } from '../actions/userActions'
 import { View } from '../components/View'
 import styled from 'styled-components'
 import CartItem from '../components/CartItem'
 import { Button } from '../components/Button'
+import {useNavigate} from 'react-router-dom'
 
 export default function Cart() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {cart} = useSelector((state) => state.fetchCartItems)
+  const {addItemToCartSuccess} = useSelector((state) => state.addItemToCart)
+  const {removeCartItemSuccess} = useSelector((state) => state.removeCartItem)
+  const {shippingInformation} = useSelector((state) => state.fetchShippingInformation)
+
+  useEffect(() => {
+    dispatch(fetchCartItems())
+    dispatch(fetchShippingInformation())
+  }, [dispatch, addItemToCartSuccess, removeCartItemSuccess])
+
   return (
     <View>
       <Title>SHOPPING CART</Title>
       <CartItem.List>
-        <CartItem.Item>
+      {cart && cart.items.map(item => {
+        return (
+          <CartItem.Item key={item.itemId} >
           <CartItem.ImageContainer>
-            <CartItem.Image />
+            <CartItem.Image src={item.image} />
           </CartItem.ImageContainer>
           <CartItem.DescriptionContainer>
-            <CartItem.Title>Title</CartItem.Title>
-            <CartItem.Price>$20</CartItem.Price>
+            <CartItem.Title>{item.name}</CartItem.Title>
+            <CartItem.Price>${item.price}</CartItem.Price>
           </CartItem.DescriptionContainer>
           <CartItem.EditContainer>
-            <CartItem.Button>+</CartItem.Button>
-            <CartItem.Button>-</CartItem.Button>
+            <CartItem.Button onClick={() => dispatch(addItemToCart(item.itemId))}>+</CartItem.Button>
+            <CartItem.Quantity>{item && item.quantity}</CartItem.Quantity>
+            <CartItem.Button onClick={() => dispatch(removeFromCart(item.itemId))}>-</CartItem.Button>
           </CartItem.EditContainer>
         </CartItem.Item>
+        )
+      })
+      }
       </CartItem.List>
       <CartItem.CostList>
         <CartItem.CostRow>
           <CartItem.RowText>Total</CartItem.RowText>
-          <CartItem.RowText>$40</CartItem.RowText>
+          <CartItem.RowText>${cart && cart.totalCost}</CartItem.RowText>
         </CartItem.CostRow>
         <CartItem.CostRow>
           <CartItem.RowText>Taxes</CartItem.RowText>
@@ -34,9 +56,13 @@ export default function Cart() {
         </CartItem.CostRow>
         <CartItem.CostRow>
           <CartItem.RowText>Delivery</CartItem.RowText>
-          <CartItem.RowText>Show</CartItem.RowText>
+          <CartItem.RowText onClick={() => navigate('/shipping')}>Edit shipping</CartItem.RowText>
         </CartItem.CostRow>
-        <Button>CHECKOUT</Button>
+        {(!cart?.items?.length || !shippingInformation) ?
+          <Button disabled>CHECKOUT</Button>
+          :
+          <Button onClick={() => navigate('/checkout')}>CHECKOUT</Button>
+         }
       </CartItem.CostList>
     </View>
   );

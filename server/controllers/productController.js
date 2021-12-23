@@ -148,7 +148,7 @@ export const fetchAllReviews = async (req,res,next) => {
       }
     }
     const reviews = await Review.find({productId: req.query.productId}).limit(limit).skip(startIndex).exec()
-    res.status(200).send({reviews: reviews, count: allReviews.length, page: page })
+    res.status(200).send({list: reviews, count: allReviews.length, page: page })
   } catch (err) {
     next(err)
   }

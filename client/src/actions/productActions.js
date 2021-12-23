@@ -5,7 +5,13 @@ import {
   PRODUCTS_FAIL,
   PRODUCT_INFORMATION_REQUEST,
   PRODUCT_INFORMATION_SUCCESS,
-  PRODUCT_INFORMATION_FAIL
+  PRODUCT_INFORMATION_FAIL,
+  PRODUCT_REVIEWS_REQUEST,
+  PRODUCT_REVIEWS_SUCCESS,
+  PRODUCT_REVIEWS_FAIL,
+  CREATE_PRODUCT_REVIEW_REQUEST,
+  CREATE_PRODUCT_REVIEW_SUCCESS,
+  CREATE_PRODUCT_REVIEW_FAIL
 } from '../constants/productConstants'
 
 
@@ -42,6 +48,43 @@ export const fetchProductInformation = (productId) => async (dispatch) => {
         error.response && error.response.data.messages
           ? error.response.data.messages
           : error.messages,
-    });
+    })
   }
-};
+}
+
+export const fetchProductReviews = (productId) => async (dispatch) => {
+  try {
+    dispatch({type: PRODUCT_REVIEWS_REQUEST})
+    const { data } = await instance.get(`/products/reviews?productId=${productId}&page=1&limit=5`)
+    dispatch({type: PRODUCT_REVIEWS_SUCCESS, payload: data})
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_REVIEWS_FAIL,
+      payload:
+        error.response && error.response.data.messages
+          ? error.response.data.messages
+          : error.messages,
+    })
+  }
+}
+
+export const createProductReview = (review) => async (dispatch) => {
+  try {
+    dispatch({type: CREATE_PRODUCT_REVIEW_REQUEST})
+  const body = {
+    productId: review.productId,
+    rating: review.rating,
+    description: review?.description || ''
+  }
+  const { data } = await instance.post('/products/create/review', body)
+  dispatch({type: CREATE_PRODUCT_REVIEW_SUCCESS, payload: data})
+  } catch (error) {
+    dispatch({
+      type: CREATE_PRODUCT_REVIEW_FAIL,
+      payload:
+        error.response && error.response.data.messages
+          ? error.response.data.messages
+          : error.messages,
+    })
+  }
+}

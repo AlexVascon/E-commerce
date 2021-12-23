@@ -1,26 +1,51 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
-import { fetchProductInformation } from '../actions/productActions'
+import { fetchProductInformation, createProductReview, fetchProductReviews } from '../actions/productActions'
+import { addItemToCart } from '../actions/cartActions'
 import { ViewResponsive, Section, List, Row, RowText, RowResponsive } from '../components/View'
+import { Form, TextArea } from '../components/Form'
 import {Button} from '../components/Button'
 import productImg from '../assets/fade_item_background.jpg'
 import styled from 'styled-components'
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined'
-import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined';
+import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
+import ReactStars from 'react-rating-stars-component'
+import Dialog from '@mui/material/Dialog'
 
 export default function Product() {
   const {productId} = useParams()
   const dispatch = useDispatch()
+  const {reviewSuccess} = useSelector((state) => state.createProductReview)
+  const {reviews} = useSelector((state) => state.fetchProductReviews)
   const {foundProductInformation} = useSelector((state) => state.fetchProductInformation)
   const [openDescription, setOpenDescription] = useState(false)
   const [openReviews, setOpenReviews] = useState(false)
+  const [rating, setRating] = useState(0)
+  const [description, setDescription] = useState('')
+  const [openReviewForm, setOpenReviewForm] = useState(false)
 
   useEffect(() => {
     dispatch(fetchProductInformation(productId))
   }, [dispatch, productId])
 
+  useEffect(() => {
+    dispatch(fetchProductReviews(productId))
+  }, [dispatch, productId])
 
+  const ratingChanged = (newRating) => setRating(newRating)
+  const handleDescriptionChange = (e) => setDescription(e.target.value)
+  const closeReviewForm = () => setOpenReviewForm(false)
+
+  const handleSubmitReview = (e) => {
+    e.preventDefault();
+    const body = { productId, rating, description }
+    dispatch(createProductReview(body))
+  }
+
+  useEffect(() => {
+    if(reviewSuccess) closeReviewForm()
+  }, [reviewSuccess])
 
   return (
     <ViewResponsive>
@@ -31,34 +56,67 @@ export default function Product() {
       <ImageContainer>
         <Image src={foundProductInformation && foundProductInformation.image} />
       </ImageContainer>
+      <ProductRating>
+      <ReactStars
+        count={5}
+        value={foundProductInformation && foundProductInformation.rating}
+        size={24}
+        activeColor="#ffd700"
+        edit={false}
+      />
+      </ProductRating>
       </Display>
       </Section>
       <Section>
         <List>
-        <RowResponsive onClick={() => setOpenReviews(!openReviews)}>
-          <Row>
+        <Row onClick={() => setOpenReviews(!openReviews)}>
           <RowText>Review</RowText>
-          {
-            !openReviews 
-            ?
+          {!openReviews ?
             <ExpandCircleDownOutlinedIcon fontSize='large' />
             :
             <ExpandLessOutlinedIcon fontSize='large' />
           }
-          </Row>
-          {openReviews 
-          &&
+        </Row>
+        {openReviews &&
           <ReviewsContainer>
-
+          <ReviewsList>
+          {!reviews?.list?.length && <RowText>No Reviews</RowText>}
+          {reviews?.list && reviews.list.map(review => {
+            return (
+              <RowResponsive key={review._id} >
+              <ReactStars
+                count={5}
+                value={review.rating}
+                size={24}
+                activeColor="#ffd700"
+              />
+              <RowText>{review.description}</RowText>
+              </RowResponsive>
+            )
+          })}
+          </ReviewsList>
+          <Dialog open={openReviewForm} onClose={closeReviewForm}>
+          <ReviewForm onSubmit={handleSubmitReview}>
+          <ReactStars
+            count={5}
+            onChange={ratingChanged}
+            size={24}
+            activeColor='#ffd700'
+          />
+            <TextArea rows='4' cols='50' type='text' value={description}
+              onChange={handleDescriptionChange}
+              placeholder='write review..' 
+            />
+            <Button type='submit'>SUBMIT REVIEW</Button>
+          </ReviewForm>
+          </Dialog>
+          <Button onClick={() => setOpenReviewForm(true)}>ADD REVIEW</Button>
           </ReviewsContainer>
           }
-          
-        </RowResponsive>
           <Row>
           <RowText>Stock</RowText>
           <RowText>{foundProductInformation?.quantity > 0 ? 'In stock' : 'Out of stock'}</RowText>
           </Row>
-          <RowResponsive>
           <Row onClick={() => setOpenDescription(!openDescription)}>
           <RowText>Description</RowText>
           {
@@ -75,9 +133,8 @@ export default function Product() {
             <Description>{foundProductInformation && foundProductInformation.description}</Description>
           </DescriptionContainer>
           }
-          </RowResponsive>
         </List>
-        <Button light={true}>ADD TO CART</Button>
+        <AddToCartButton onClick={() => dispatch(addItemToCart(productId))}>ADD TO CART</AddToCartButton>
       </Section>
     </ViewResponsive>
   )
@@ -118,7 +175,6 @@ position: absolute;
   right: 0%;
   z-index: 1;
 `
-
 const DescriptionContainer = styled.div`
  display: flex;
   flex-direction: column;
@@ -126,8 +182,12 @@ const DescriptionContainer = styled.div`
   height: 10rem;
   width: 100%;
 `
-
 const Description = styled.p``
+
+const ProductRating = styled.div`
+position: absolute;
+right: 30%;
+`
 
 const ReviewsContainer = styled.div`
 display: flex;
@@ -136,5 +196,28 @@ display: flex;
   width: 100%;
   overflow-y: scroll;
 `
+const ReviewForm = styled(Form)`
+padding: 2rem;
+justify-content: center;
+align-items: center;
+`
+const ReviewsList = styled.ul`
+height: 25rem;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  gap: .5rem;
+  position: relative;
+`
+const AddToCartButton = styled(Button)`
+width: 90%;
+justify-self: center;
+margin: auto;
+margin-bottom: 3rem;
+`
+
+
 
 

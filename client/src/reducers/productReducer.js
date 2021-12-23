@@ -5,7 +5,13 @@ import {
   PRODUCTS_FAIL,
   PRODUCT_INFORMATION_REQUEST,
   PRODUCT_INFORMATION_SUCCESS,
-  PRODUCT_INFORMATION_FAIL
+  PRODUCT_INFORMATION_FAIL,
+  PRODUCT_REVIEWS_REQUEST,
+  PRODUCT_REVIEWS_SUCCESS,
+  PRODUCT_REVIEWS_FAIL,
+  CREATE_PRODUCT_REVIEW_REQUEST,
+  CREATE_PRODUCT_REVIEW_SUCCESS,
+  CREATE_PRODUCT_REVIEW_FAIL
 } from '../constants/productConstants'
 
 export const fetchProductsReducer = (state = {}, action) => {
@@ -29,6 +35,32 @@ export const fetchProductInformationReducer = (state = {}, action) => {
       return { fetchProductInformationLoading: false, foundProductInformation: action.payload }
     case PRODUCT_INFORMATION_FAIL:
       return { fetchProductInformationLoading: false, fetchProductInformationError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const fetchProductReviewsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_REVIEWS_REQUEST:
+      return { loadingProductReviews: true }
+    case PRODUCT_REVIEWS_SUCCESS:
+      return { loadingProductReviews: false, reviews: action.payload }
+    case PRODUCT_REVIEWS_FAIL:
+      return { loadingProductReviews: false, fetchProductReviewsError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const createProductReviewReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CREATE_PRODUCT_REVIEW_REQUEST:
+      return { loadingCreateProductReview: true }
+    case CREATE_PRODUCT_REVIEW_SUCCESS:
+      return { loadingCreateProductReview: false, reviewSuccess: action.payload }
+    case CREATE_PRODUCT_REVIEW_FAIL:
+      return { loadingCreateProductReview: false, createProductReviewError: action.payload }
     default:
       return state
   }

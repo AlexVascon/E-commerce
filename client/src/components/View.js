@@ -78,4 +78,8 @@ export const Error = styled.p`
   outline: none;
   padding: 1rem;
   background-color: rgba(253, 163, 249, 0.582);
+  width: 80%;
+  align-self: center;
+  margin: auto;
+  margin-bottom: 0;
 `

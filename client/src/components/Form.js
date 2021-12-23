@@ -37,5 +37,11 @@ padding: 0;
   justify-content: space-between;
   gap: .5rem;
   border: none;
-  
+`
+export const TextArea = styled.textarea`
+border: 1px solid rgba(204, 174, 5, 0.945);
+border-radius: .5rem;
+padding: 1rem;
+height: 10rem;
+width: 95%;
 `

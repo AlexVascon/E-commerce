@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import { Image } from '../components/Image'
 import { ViewResponsive, SectionResponsive } from '../components/View'
 import styled from 'styled-components'
@@ -11,17 +12,17 @@ export default function Home() {
       <ViewResponsive >
       <SectionResponsive>
         <Image imageUrl={process.env.PUBLIC_URL + MenImg} >
-        <Text>Men</Text>
+        <Text to='/selection/men'>Men</Text>
         </Image>
         <Image imageUrl={process.env.PUBLIC_URL + WomenImg}>
-        <Text>Women</Text>
+        <Text to='/selection/women'>Women</Text>
         </Image>
        </SectionResponsive>
       </ViewResponsive>
   )
 }
 
-const Text = styled.h1`
+const Text = styled(Link)`
 width: 15rem;
 padding: .5rem 0;
 border: 3px solid white;
@@ -30,4 +31,5 @@ text-align: center;
 justify-self: center;
 font-weight: 700;
 font-size: 4rem;
+text-decoration: none;
 `

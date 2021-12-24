@@ -1,12 +1,9 @@
 import React from 'react'
 import {useSelector} from 'react-redux'
-import { Navigate } from 'react-router-dom'
-import CircularProgress from '@mui/material/CircularProgress'
+import { Navigate, Outlet } from 'react-router'
 
-export default function PrivateRoute({ children, redirectTo }) {
-  const {authenticationLoading, verified} = useSelector((state) => state.authenticate)
-
-  if (authenticationLoading) return <CircularProgress />
+export default function PrivateRoute() {
+  const {verified} = useSelector((state) => state.authenticate)
   
-  return verified ? children : <Navigate to={redirectTo} />
+  return verified ? <Outlet /> : <Navigate to='/portal' />
 }

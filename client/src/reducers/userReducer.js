@@ -5,6 +5,8 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
   AUTHENTICATION_REQUEST,
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAIL,
@@ -37,6 +39,17 @@ export const loginReducer = (state = {}, action) => {
       return { loadingLogin: false, loggedUser: action.payload }
     case LOGIN_FAIL:
       return { loadingLogin: false, loginError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const logoutReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LOGOUT_REQUEST:
+      return { loadingLogout: true }
+    case LOGOUT_SUCCESS:
+      return { loadingLogout: false, loggedOut: true }
     default:
       return state
   }

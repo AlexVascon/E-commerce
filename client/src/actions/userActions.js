@@ -6,6 +6,8 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
   AUTHENTICATION_REQUEST,
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAIL,
@@ -54,9 +56,9 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
         error.response && error.response.data.messages
           ? error.response.data.messages
           : error.messages,
-    });
+    })
   }
-};
+}
 
 export const authenticate = () => async (dispatch) => {
   try {
@@ -70,6 +72,12 @@ export const authenticate = () => async (dispatch) => {
       payload: false
     })
   }
+}
+
+export const logout = () => (dispatch) => {
+    dispatch({type: LOGOUT_REQUEST})
+    localStorage.removeItem('accessToken')
+    dispatch({type: LOGOUT_SUCCESS})
 }
 
 export const saveShippingInformation = (shippingInformation) => async (dispatch) => {

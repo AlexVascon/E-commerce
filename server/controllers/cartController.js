@@ -14,7 +14,7 @@ export const addItemToCart = async (req, res, next) => {
       })
       cart.items = updatedItemQuantity
       cart.totalCost += product.price
-      cart.taxPrice = addDecimals(Number((0.15 * cart.totalCost).toFixed(2)))
+      cart.taxPrice = parseFloat(Number((0.15 * cart.totalCost))).toFixed(2)
     } else {
       await cart.items.push({
         itemId: product._id,

@@ -34,7 +34,7 @@ export const fetchUser = async (req,res,next) => {
     const {usernameOrEmail, password} = req.body
     const searchCriteria = await usernameOrEmail.includes('@') ? 'email' : 'username'
     const user = await User.findOne( { [searchCriteria]: usernameOrEmail} ).lean().orFail()
-    if(!bcrypt.compareSync(password, user.password)) return res.status(400).send({message: 'Invalid username or password'})
+    if(!bcrypt.compareSync(password, user.password)) return res.status(400).send({messages: 'Invalid username or password'})
     const payload = {
       username: user.username,
       _id: user._id,

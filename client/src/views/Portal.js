@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { register, login } from '../actions/userActions'
-import { authenticate } from '../actions/userActions'
 import { View, Error } from '../components/View'
 import portalImg from '../assets/greyscale_mountains.jpg'
 import { Form, Input } from '../components/Form'
 import { Button } from '../components/Button'
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 
 export default function Portal() {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const {registerError} = useSelector((state) => state.register)
   const { loggedUser} = useSelector((state) => state.login)
@@ -35,10 +36,9 @@ export default function Portal() {
     dispatch(login(usernameOrEmail, password))
   }
 
-  // if logged in, call dispatch, which updates route authentication
   useEffect(() => {
-    if(loggedUser) dispatch(authenticate())
-  }, [dispatch, loggedUser])
+    if(loggedUser) navigate('/account')
+  }, [loggedUser, navigate])
 
   return (
     <View imageUrl={process.env.PUBLIC_URL + portalImg} >

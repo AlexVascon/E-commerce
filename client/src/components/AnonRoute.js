@@ -1,9 +1,8 @@
 import React from 'react'
-import {useSelector} from 'react-redux'
 import { Navigate, Outlet } from 'react-router'
 
 export default function AnonRoute() {
-  const {verified} = useSelector((state) => state.authenticate)
+  const accessToken = localStorage.getItem('accessToken')
 
-  return verified ? <Navigate to='/account' /> : <Outlet />
+  return accessToken ? <Navigate to='/account' /> : <Outlet />
 }

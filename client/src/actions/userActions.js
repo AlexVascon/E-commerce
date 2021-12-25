@@ -63,7 +63,7 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
 export const authenticate = () => async (dispatch) => {
   try {
     dispatch({type: AUTHENTICATION_REQUEST})
-    const validationToken = await instance.get('/user/verify')
+    const validationToken = localStorage.getItem('accessToken')
     if (!validationToken) dispatch({ type: AUTHENTICATION_FAIL, payload: false })
     else dispatch({ type: AUTHENTICATION_SUCCESS, payload: true })
   } catch (error) {

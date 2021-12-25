@@ -15,6 +15,7 @@ export default function Account() {
     <ViewResponsive imageUrl={process.env.PUBLIC_URL + accountImg}>
       <LinkText to='/shipping'>Shipping address</LinkText>
       <LinkText to='/cart'>Cart</LinkText>
+      <LinkText to='/my-orders'>Orders</LinkText>
       <Text onClick={() => { 
         dispatch(logout())
         navigate('/portal')

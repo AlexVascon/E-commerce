@@ -14,6 +14,7 @@ export const addItemToCart = async (req, res, next) => {
       })
       cart.items = updatedItemQuantity
       cart.totalCost += product.price
+      cart.taxPrice = addDecimals(Number((0.15 * cart.totalCost).toFixed(2)))
     } else {
       await cart.items.push({
         itemId: product._id,
@@ -23,6 +24,7 @@ export const addItemToCart = async (req, res, next) => {
         price: product.price,
       })
       cart.totalCost += product.price
+      cart.taxPrice = parseFloat(Number((0.15 * cart.totalCost))).toFixed(2)
     }
     await cart.save()
     res.status(200).send({message: 'added cart item'})

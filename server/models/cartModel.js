@@ -30,6 +30,11 @@ const cartSchema = new mongoose.Schema({
 totalCost: {
   type: Number,
   default: 0
+},
+taxPrice: {
+  type: Number,
+  required: true,
+  default: 0.0
 }
 })
 

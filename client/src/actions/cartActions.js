@@ -13,6 +13,7 @@ import {
 
 export const addItemToCart = (productId) => async (dispatch) => {
   try {
+    console.log('here???')
     dispatch({type: CART_ADD_PRODUCT_REQUEST})
     const body = { productId }
     const { data } = await instance.post('/cart/add', body)

@@ -1,7 +1,6 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { fetchCartItems, addItemToCart, removeFromCart } from '../actions/cartActions'
-import { fetchShippingInformation } from '../actions/userActions'
 import { View } from '../components/View'
 import styled from 'styled-components'
 import CartItem from '../components/CartItem'
@@ -12,20 +11,40 @@ export default function Cart() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const {cart} = useSelector((state) => state.fetchCartItems)
-  const {addItemToCartSuccess} = useSelector((state) => state.addItemToCart)
-  const {removeCartItemSuccess} = useSelector((state) => state.removeCartItem)
-  const {shippingInformation} = useSelector((state) => state.fetchShippingInformation)
+  const [cartItems, setCartItems] = useState(null)
+  const [totalPrice, setTotalPrice] = useState(null)
 
   useEffect(() => {
     dispatch(fetchCartItems())
-    dispatch(fetchShippingInformation())
-  }, [dispatch, addItemToCartSuccess, removeCartItemSuccess])
+  }, [dispatch])
+
+  useEffect(() => {
+    if(cart) {
+      setCartItems(cart.items)
+      setTotalPrice(cart.totalCost)
+    } 
+  }, [cart])
+
+  // for smoother user experience without constant screen flash on update
+  const updateItemQuantity = (amount, itemId,index) => {
+    let updatedCartItems = [...cartItems]
+    updatedCartItems[index].quantity += amount 
+    if(amount > 0) {
+      dispatch(addItemToCart(itemId))
+      setTotalPrice(totalPrice => totalPrice += updatedCartItems[index].price)
+    } 
+    if(amount < 0) {
+      dispatch(removeFromCart(itemId))
+      setTotalPrice(totalPrice => totalPrice -= updatedCartItems[index].price)
+    } 
+    setCartItems(updatedCartItems)
+  }
 
   return (
     <View>
       <Title>SHOPPING CART</Title>
       <CartItem.List>
-      {cart && cart.items.map(item => {
+      {cartItems && cartItems.map((item, index) => {
         return (
           <CartItem.Item key={item.itemId} >
           <CartItem.ImageContainer>
@@ -36,9 +55,9 @@ export default function Cart() {
             <CartItem.Price>${item.price}</CartItem.Price>
           </CartItem.DescriptionContainer>
           <CartItem.EditContainer>
-            <CartItem.Button onClick={() => dispatch(addItemToCart(item.itemId))}>+</CartItem.Button>
+            <CartItem.Button onClick={() => updateItemQuantity(1,item.itemId, index)}>+</CartItem.Button>
             <CartItem.Quantity>{item && item.quantity}</CartItem.Quantity>
-            <CartItem.Button onClick={() => dispatch(removeFromCart(item.itemId))}>-</CartItem.Button>
+            <CartItem.Button onClick={() => updateItemQuantity(-1,item.itemId, index)}>-</CartItem.Button>
           </CartItem.EditContainer>
         </CartItem.Item>
         )
@@ -48,28 +67,24 @@ export default function Cart() {
       <CartItem.CostList>
         <CartItem.CostRow>
           <CartItem.RowText>Total</CartItem.RowText>
-          <CartItem.RowText>${cart && cart.totalCost}</CartItem.RowText>
+          <CartItem.RowText>${totalPrice && totalPrice}</CartItem.RowText>
         </CartItem.CostRow>
         <CartItem.CostRow>
           <CartItem.RowText>Taxes</CartItem.RowText>
-          <CartItem.RowText>$40</CartItem.RowText>
+          <CartItem.RowText>${(cart && cart.taxPrice) || 0}</CartItem.RowText>
         </CartItem.CostRow>
         <CartItem.CostRow>
           <CartItem.RowText>Delivery</CartItem.RowText>
-          {shippingInformation ?
-          <EditShipping onClick={() => navigate('/shipping')}>Edit Shipping</EditShipping>
-          :
-          <AddShipping onClick={() => navigate('/shipping')}>Add shipping</AddShipping>
-          }
+          <CartItem.RowText>Free</CartItem.RowText>
         </CartItem.CostRow>
-        {(!cart?.items?.length || !shippingInformation) ?
+        {(!cart?.items?.length) ?
           <Button disabled>CHECKOUT</Button>
           :
           <Button onClick={() => navigate('/checkout')}>CHECKOUT</Button>
          }
       </CartItem.CostList>
     </View>
-  );
+  )
 }
 
 const Title = styled.h1`
@@ -80,9 +95,4 @@ const Title = styled.h1`
   color: rgba(235, 198, 36, 0.945);
   font-size: 1rem;
 `
-const AddShipping = styled(CartItem.RowText)`
-color: red;
-`
-const EditShipping = styled(CartItem.RowText)`
-color: blue;
-`
+

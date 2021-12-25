@@ -12,6 +12,7 @@ import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOu
 import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ReactStars from 'react-rating-stars-component'
 import Dialog from '@mui/material/Dialog'
+import { useSnackbar } from 'notistack'
 
 export default function Product() {
   const {productId} = useParams()
@@ -19,6 +20,7 @@ export default function Product() {
   const {reviewSuccess} = useSelector((state) => state.createProductReview)
   const {reviews} = useSelector((state) => state.fetchProductReviews)
   const {foundProductInformation} = useSelector((state) => state.fetchProductInformation)
+  const { enqueueSnackbar } = useSnackbar();
   const [openDescription, setOpenDescription] = useState(false)
   const [openReviews, setOpenReviews] = useState(false)
   const [rating, setRating] = useState(0)
@@ -46,6 +48,11 @@ export default function Product() {
   useEffect(() => {
     if(reviewSuccess) closeReviewForm()
   }, [reviewSuccess])
+
+  const handleClickAddItemToCart = (variant) => () => {
+    dispatch(addItemToCart(productId))
+    enqueueSnackbar('Added to cart!', { variant, anchorOrigin: {horizontal: 'left',vertical: 'top'}})
+  }
 
   return (
     <ViewResponsive>
@@ -134,7 +141,7 @@ export default function Product() {
           </DescriptionContainer>
           }
         </List>
-        <AddToCartButton onClick={() => dispatch(addItemToCart(productId))}>ADD TO CART</AddToCartButton>
+        <AddToCartButton onClick={handleClickAddItemToCart('success')}>ADD TO CART</AddToCartButton>
       </Section>
     </ViewResponsive>
   )

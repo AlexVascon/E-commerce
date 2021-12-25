@@ -1,5 +1,6 @@
 import Order from '../models/orderModel.js'
 import Cart from '../models/cartModel.js'
+import Product from '../models/productModel.js'
 import Shipping from '../models/shippingModel.js'
 import Stripe from 'stripe'
 const stripe = new Stripe('sk_test_51K0lRmC2ZHbTWgUUFfWMf3LrQq8LcWM0YUmf41Eqba9s9K1JAs83j55n9hwYjRrscVGntiPyLSs1TJETKutl4Tj900qn8bBxKZ')
@@ -33,6 +34,13 @@ export const createOrder = async (req,res,next) => {
     cart.totalCost = 0
     cart.taxPrice = 0.0
     await cart.save()
+    const productIds = order.items.map(item => item.itemId)
+    const products = await Product.find({_id: {$in: productIds}})
+    await Promise.all(products.map(async product => {
+      const orderItem = order.items.filter(item => item.itemId === product.id)[0] // there can be only one!
+      product.quantity -= orderItem.quantity
+      await product.save()
+    }))
     res.status(200).send(order)
   } catch (err) {
     next(err)

@@ -51,7 +51,7 @@ export default function Product() {
 
   const handleClickAddItemToCart = (variant) => () => {
     dispatch(addItemToCart(productId))
-    enqueueSnackbar('Added to cart!', { variant, anchorOrigin: {horizontal: 'left',vertical: 'top'}})
+    enqueueSnackbar('Added to cart!', { variant, anchorOrigin: {horizontal: 'left',vertical: 'top'}, autoHideDuration: 1000})
   }
 
   return (
@@ -141,7 +141,12 @@ export default function Product() {
           </DescriptionContainer>
           }
         </List>
-        <AddToCartButton onClick={handleClickAddItemToCart('success')}>ADD TO CART</AddToCartButton>
+        {foundProductInformation?.quantity > 0 ? 
+          <AddToCartButton onClick={handleClickAddItemToCart('success')}>ADD TO CART</AddToCartButton>
+          :
+          <AddToCartButton disabled >ADD TO CART</AddToCartButton>
+        }
+        
       </Section>
     </ViewResponsive>
   )

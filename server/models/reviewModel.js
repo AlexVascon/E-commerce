@@ -8,7 +8,7 @@ const reviewSchema = new mongoose.Schema(
   },
   rating: {
     type: Number,
-    required: [true, 'to submit review please provide a rating']
+    required: [true, 'to submit review please provide a rating.']
   },
   description: {
     type: String
@@ -16,7 +16,6 @@ const reviewSchema = new mongoose.Schema(
   userId: {
     type: String,
     required: true,
-    unique: true
   },
 },
 {

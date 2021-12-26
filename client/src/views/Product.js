@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
+import {authenticate} from '../actions/userActions'
 import { fetchProductInformation, createProductReview, fetchProductReviews } from '../actions/productActions'
 import { addItemToCart } from '../actions/cartActions'
 import { ViewResponsive, Section, List, Row, RowText, RowResponsive } from '../components/View'
@@ -20,12 +21,18 @@ export default function Product() {
   const {reviewSuccess} = useSelector((state) => state.createProductReview)
   const {reviews} = useSelector((state) => state.fetchProductReviews)
   const {foundProductInformation} = useSelector((state) => state.fetchProductInformation)
+  const {userInfo} = useSelector((state) => state.authenticate)
   const { enqueueSnackbar } = useSnackbar();
   const [openDescription, setOpenDescription] = useState(false)
   const [openReviews, setOpenReviews] = useState(false)
   const [rating, setRating] = useState(0)
   const [description, setDescription] = useState('')
+  const [hasReviewed, setHasReviewed] = useState(false)
   const [openReviewForm, setOpenReviewForm] = useState(false)
+
+  useEffect(() => {
+    dispatch(authenticate())
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(fetchProductInformation(productId))
@@ -34,6 +41,14 @@ export default function Product() {
   useEffect(() => {
     dispatch(fetchProductReviews(productId))
   }, [dispatch, productId])
+
+  useEffect(() => {
+    if(reviews) {
+      const {_id} = userInfo
+      const userReview = reviews.list.filter(review => review.userId === _id)
+      userReview.length ? setHasReviewed(true) : setHasReviewed(false)
+    }
+  }, [reviews, userInfo, hasReviewed])
 
   const ratingChanged = (newRating) => setRating(newRating)
   const handleDescriptionChange = (e) => setDescription(e.target.value)
@@ -64,20 +79,21 @@ export default function Product() {
         <Image src={foundProductInformation && foundProductInformation.image} />
       </ImageContainer>
       <ProductRating>
+      {foundProductInformation && 
       <ReactStars
         count={5}
-        value={foundProductInformation && foundProductInformation.rating}
+        value={foundProductInformation.rating}
         size={24}
         activeColor="#ffd700"
         edit={false}
-      />
+      />}
       </ProductRating>
       </Display>
       </Section>
       <Section>
         <List>
         <Row onClick={() => setOpenReviews(!openReviews)}>
-          <RowText>Review</RowText>
+          <RowText>Reviews {reviews && reviews.list?.length}</RowText>
           {!openReviews ?
             <ExpandCircleDownOutlinedIcon fontSize='large' />
             :
@@ -117,7 +133,12 @@ export default function Product() {
             <Button type='submit'>SUBMIT REVIEW</Button>
           </ReviewForm>
           </Dialog>
+          {!userInfo && <RowText>Please login to write a review</RowText>}
+          {(userInfo && hasReviewed) ? 
+          <RowText>Cannot write more than one review</RowText>
+          :
           <Button onClick={() => setOpenReviewForm(true)}>ADD REVIEW</Button>
+          }
           </ReviewsContainer>
           }
           <Row>

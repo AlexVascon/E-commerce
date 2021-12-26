@@ -60,7 +60,7 @@ export const authenticationReducer = (state = {}, action) => {
     case AUTHENTICATION_REQUEST:
       return { authenticationLoading: true }
     case AUTHENTICATION_SUCCESS:
-      return { authenticationLoading: false, verified: action.payload }
+      return { authenticationLoading: false, userInfo: action.payload }
     case AUTHENTICATION_FAIL:
       return { authenticationLoading: false, authenticationError: action.payload }
     default:

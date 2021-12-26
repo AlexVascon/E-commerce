@@ -63,13 +63,14 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
 export const authenticate = () => async (dispatch) => {
   try {
     dispatch({type: AUTHENTICATION_REQUEST})
-    const validationToken = localStorage.getItem('accessToken')
-    if (!validationToken) dispatch({ type: AUTHENTICATION_FAIL, payload: false })
-    else dispatch({ type: AUTHENTICATION_SUCCESS, payload: true })
+    const {data} = await instance.get('/user/verify')
+    dispatch({ type: AUTHENTICATION_SUCCESS, payload: data })
   } catch (error) {
     dispatch({
       type: AUTHENTICATION_FAIL,
-      payload: false
+      payload: error.response && error.response.data.messages
+      ? error.response.data.messages
+      : error.messages,
     })
   }
 }

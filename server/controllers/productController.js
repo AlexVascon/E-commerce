@@ -153,3 +153,12 @@ export const fetchAllReviews = async (req,res,next) => {
     next(err)
   }
 }
+
+export const fetchTopProducts = async (req,res,next) => {
+  try {
+    const products = await Product.find({}).sort({rating: -1}).limit(3).lean()
+    res.status(200).send(products)
+  } catch (err) {
+    next(err)
+  }
+}

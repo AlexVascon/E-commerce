@@ -14,7 +14,10 @@ import {
   CREATE_PRODUCT_REVIEW_FAIL,
   SIMILAR_PRODUCT_REQUEST,
   SIMILAR_PRODUCT_SUCCESS,
-  SIMILAR_PRODUCT_FAIL
+  SIMILAR_PRODUCT_FAIL,
+  TOP_PRODUCTS_REQUEST,
+  TOP_PRODUCTS_SUCCESS,
+  TOP_PRODUCTS_FAIL
 } from '../constants/productConstants'
 
 export const fetchProductsReducer = (state = {}, action) => {
@@ -77,6 +80,19 @@ export const fetchSimilarProductsReducer = (state = {}, action) => {
       return { loadingFetchSimilarProducts: false, similarProducts: action.payload }
     case SIMILAR_PRODUCT_FAIL:
       return { loadingFetchSimilarProducts: false, fetchSimilarProductsError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const fetchTopProductsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case TOP_PRODUCTS_REQUEST:
+      return { loadingFetchTopProducts: true }
+    case TOP_PRODUCTS_SUCCESS:
+      return { loadingFetchTopProducts: false, topProducts: action.payload }
+    case TOP_PRODUCTS_FAIL:
+      return { loadingFetchTopProducts: false, fetchTopProductsError: action.payload }
     default:
       return state
   }

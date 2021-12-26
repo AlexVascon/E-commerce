@@ -14,7 +14,10 @@ import {
   CREATE_PRODUCT_REVIEW_FAIL,
   SIMILAR_PRODUCT_REQUEST,
   SIMILAR_PRODUCT_SUCCESS,
-  SIMILAR_PRODUCT_FAIL
+  SIMILAR_PRODUCT_FAIL,
+  TOP_PRODUCTS_REQUEST,
+  TOP_PRODUCTS_SUCCESS,
+  TOP_PRODUCTS_FAIL
 } from '../constants/productConstants'
 
 
@@ -100,6 +103,22 @@ export const fetchSimilarProducts = (productId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: SIMILAR_PRODUCT_FAIL,
+      payload:
+        error.response && error.response.data.messages
+          ? error.response.data.messages
+          : error.messages,
+    })
+  }
+}
+
+export const fetchTopProducts = () => async (dispatch) => {
+  try {
+    dispatch({type: TOP_PRODUCTS_REQUEST})
+    const {data} = await instance.get('/products/top')
+    dispatch({type: TOP_PRODUCTS_SUCCESS, payload: data})
+  } catch (error) {
+    dispatch({
+      type: TOP_PRODUCTS_FAIL,
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages

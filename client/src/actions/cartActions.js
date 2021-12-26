@@ -8,7 +8,10 @@ import {
   FETCH_CART_FAIL,
   REMOVE_ITEM_REQUEST,
   REMOVE_ITEM_SUCCESS,
-  REMOVE_ITEM_FAIL
+  REMOVE_ITEM_FAIL,
+  ANONYMOUS_CART_ADD_PRODUCT_REQUEST,
+  ANONYMOUS_ADD_PRODUCT_SUCCESS,
+  ANONYMOUS_ADD_PRODUCT_FAIL
 } from '../constants/cartConstants'
 
 export const addItemToCart = (productId) => async (dispatch) => {
@@ -56,6 +59,27 @@ export const removeFromCart = (itemId) => async (dispatch) => {
         error.response && error.response.data.messages
           ? error.response.data.messages
           : error.messages,
-    });
+    })
   }
-};
+}
+
+export const addCartItemToAnonymous = (itemId) => async (dispatch) => {
+    dispatch({type: ANONYMOUS_CART_ADD_PRODUCT_REQUEST})
+    let anonymousCart = JSON.parse(localStorage.getItem('anonymousCart'))
+    if(!anonymousCart) {
+      anonymousCart = {cart: [{itemId: itemId, quantity: 1}]}
+      localStorage.setItem('anonymousCart', JSON.stringify(anonymousCart))
+    } else {
+      const itemInCart = anonymousCart.cart.filter(item => item.itemId === itemId)
+      if(itemInCart.length) {
+        const updatedItemQuantity = anonymousCart.cart.map(item => {
+          if(item.itemId === itemId) item.quantity ++
+          return item
+        })
+        anonymousCart.cart = updatedItemQuantity
+      } else {
+        anonymousCart.cart.push({itemId: itemId, quantity: 1})
+      }
+      localStorage.setItem('anonymousCart', JSON.stringify(anonymousCart))
+    }
+}

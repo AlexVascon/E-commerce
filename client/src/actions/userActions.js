@@ -22,7 +22,9 @@ import {
 export const register = (username, email, password, confirmPassword) => async (dispatch) => {
   try {
     dispatch({type: REGISTRATION_REQUEST})
-    const body = { username, email, password , confirmPassword}
+    const anonymousCart = JSON.parse(localStorage.getItem('anonymousCart'))
+    const cartItems = anonymousCart ? anonymousCart.cart : null
+    const body = { username, email, password , confirmPassword, cartItems}
     const { data } = await instance.post('/user/register',body)
     localStorage.setItem('accessToken', data)
     const validationToken = await instance.get('/user/verify')
@@ -43,7 +45,7 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
     dispatch({type: LOGIN_REQUEST})
     const body = { 
       usernameOrEmail: usernameOrEmail, 
-      password: password 
+      password: password,
     }
     const { data } = await instance.post('/user/login',body)
     localStorage.setItem('accessToken', data)

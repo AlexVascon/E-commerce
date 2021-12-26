@@ -7,7 +7,8 @@ import {
   FETCH_CART_FAIL,
   REMOVE_ITEM_REQUEST,
   REMOVE_ITEM_SUCCESS,
-  REMOVE_ITEM_FAIL
+  REMOVE_ITEM_FAIL,
+  ANONYMOUS_CART_ADD_PRODUCT_REQUEST
 } from '../constants/cartConstants'
 
 export const addItemToCartReducer = (state = {}, action) => {
@@ -45,6 +46,15 @@ export const removeCartItemReducer = (state = {}, action) => {
     case REMOVE_ITEM_FAIL:
       return { loadingRemoveCartItem: false, removeCartItemError: action.payload }
     default:
+      return state
+  }
+}
+
+export const addCartItemToAnonymousReducer = (state = {}, action) => {
+  switch(action.type) {
+    case ANONYMOUS_CART_ADD_PRODUCT_REQUEST:
+      return state
+      default:
       return state
   }
 }

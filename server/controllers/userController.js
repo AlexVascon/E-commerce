@@ -3,11 +3,12 @@ import bcrypt from 'bcrypt'
 import {generateAccessToken} from '../utils/generateToken.js'
 import Cart from '../models/cartModel.js'
 import Shipping from '../models/shippingModel.js'
+import Product from '../models/productModel.js'
 
 // register
 export const createUser = async (req,res,next) => {
   try {
-    const {username, email, password, confirmPassword} = req.body
+    const {username, email, password, confirmPassword, cartItems} = req.body
     if(password !== confirmPassword) return res.status(400).send({messages: 'passwords dont match.'})
     const user = await new User({
       username: username,
@@ -16,6 +17,22 @@ export const createUser = async (req,res,next) => {
     })
     await user.save()
     const cart = await new Cart({userId: user._id})
+    await cart.save()
+    if(cartItems) { // if user added cart items without account
+      await Promise.all(cartItems.map(async item => {
+        const product = await Product.findById(item.itemId)
+        cart.items.push({
+          itemId: product._id,
+        name: product.title,
+        image: product.image,
+        quantity: item.quantity, // set in local storage
+        price: product.price,
+        })
+        cart.totalCost += product.price * item.quantity
+        cart.taxPrice = parseFloat(Number((0.15 * cart.totalCost))).toFixed(2)
+      }))
+      await cart.save()
+    }
     await cart.save()
     const payload = {
       username: user.username,

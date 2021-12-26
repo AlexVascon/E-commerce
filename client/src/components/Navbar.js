@@ -1,10 +1,48 @@
 import React, {useState, useEffect} from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { authenticate } from '../actions/userActions'
 import styled from 'styled-components'
 import MenuIcon from '@mui/icons-material/Menu'
 import Drawer from '@mui/material/Drawer'
 import { Link } from 'react-router-dom'
+
+export default function Navbar() {
+  const accessToken = localStorage.getItem('accessToken')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  const toggleNavMenu = (state) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return
+    }
+    setOpen(state)
+  }
+
+  useEffect(() => {
+    if(accessToken) setIsLoggedIn(true)
+    else setIsLoggedIn(false)
+  }, [accessToken])
+
+  return (
+    <Nav>
+      <HomeLink to='/'>Shop</HomeLink>
+      <MenuIcon fontSize='large' onClick={toggleNavMenu(true)} />
+      <Drawer
+        anchor={'right'}
+        open={open}
+        onClose={toggleNavMenu(false)}
+        >
+      <List>
+        {!isLoggedIn && <NavLink to='/portal'>Portal</NavLink> }
+        {isLoggedIn && <NavLink to='/account'>Account</NavLink>} 
+        {isLoggedIn && <NavLink to='/cart'>Cart</NavLink>} 
+        <NavLink to={'/selection/men'}>Men</NavLink> 
+        <NavLink to={'/selection/women'}>Women</NavLink> 
+
+        <NavLink to='/about'>About</NavLink>
+      </List> 
+      </Drawer>
+    </Nav>
+  )
+}
 
 const Nav = styled.nav`
 width: 100%;
@@ -41,37 +79,3 @@ text-decoration: none;
 color: white;
 font-size: 2rem;
 `
-
-export default function Navbar() {
-  const dispatch = useDispatch()
-  const {verified} = useSelector((state) => state.authenticate)
-  const [open, setOpen] = useState(false)
-  const toggleNavMenu = (state) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return
-    }
-    setOpen(state)
-  }
-
-  useEffect(() => {
-    dispatch(authenticate())
-  }, [dispatch])
-
-  return (
-    <Nav>
-      <HomeLink to='/'>Shop</HomeLink>
-      <MenuIcon fontSize='large' onClick={toggleNavMenu(true)} />
-      <Drawer
-            anchor={'right'}
-            open={open}
-            onClose={toggleNavMenu(false)}
-          >
-      <List>
-        {!verified && <NavLink to='/portal'>Portal</NavLink> }
-        {verified && <NavLink to='/account'>Account</NavLink>} 
-        <NavLink to='/about'>About</NavLink>
-      </List> 
-      </Drawer>
-    </Nav>
-  )
-}

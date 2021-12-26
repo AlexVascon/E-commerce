@@ -11,7 +11,10 @@ import {
   PRODUCT_REVIEWS_FAIL,
   CREATE_PRODUCT_REVIEW_REQUEST,
   CREATE_PRODUCT_REVIEW_SUCCESS,
-  CREATE_PRODUCT_REVIEW_FAIL
+  CREATE_PRODUCT_REVIEW_FAIL,
+  SIMILAR_PRODUCT_REQUEST,
+  SIMILAR_PRODUCT_SUCCESS,
+  SIMILAR_PRODUCT_FAIL
 } from '../constants/productConstants'
 
 
@@ -81,6 +84,22 @@ export const createProductReview = (review) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CREATE_PRODUCT_REVIEW_FAIL,
+      payload:
+        error.response && error.response.data.messages
+          ? error.response.data.messages
+          : error.messages,
+    })
+  }
+}
+
+export const fetchSimilarProducts = (productId) => async (dispatch) => {
+  try {
+    dispatch({type: SIMILAR_PRODUCT_REQUEST})
+    const {data} = await instance.get(`/products/suggestions/${productId}`)
+    dispatch({type: SIMILAR_PRODUCT_SUCCESS, payload: data})
+  } catch (error) {
+    dispatch({
+      type: SIMILAR_PRODUCT_FAIL,
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages

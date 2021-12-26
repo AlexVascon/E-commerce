@@ -33,4 +33,12 @@ ${'' /* easily style pagination component from external library */}
   color: white;
   background-color: grey;
 }
+
+${'' /* style pagination library */}
+.item-suggestions-carousel {
+  height: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 `

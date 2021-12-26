@@ -11,7 +11,10 @@ import {
   PRODUCT_REVIEWS_FAIL,
   CREATE_PRODUCT_REVIEW_REQUEST,
   CREATE_PRODUCT_REVIEW_SUCCESS,
-  CREATE_PRODUCT_REVIEW_FAIL
+  CREATE_PRODUCT_REVIEW_FAIL,
+  SIMILAR_PRODUCT_REQUEST,
+  SIMILAR_PRODUCT_SUCCESS,
+  SIMILAR_PRODUCT_FAIL
 } from '../constants/productConstants'
 
 export const fetchProductsReducer = (state = {}, action) => {
@@ -61,6 +64,19 @@ export const createProductReviewReducer = (state = {}, action) => {
       return { loadingCreateProductReview: false, reviewSuccess: action.payload }
     case CREATE_PRODUCT_REVIEW_FAIL:
       return { loadingCreateProductReview: false, createProductReviewError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const fetchSimilarProductsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SIMILAR_PRODUCT_REQUEST:
+      return { loadingFetchSimilarProducts: true }
+    case SIMILAR_PRODUCT_SUCCESS:
+      return { loadingFetchSimilarProducts: false, similarProducts: action.payload }
+    case SIMILAR_PRODUCT_FAIL:
+      return { loadingFetchSimilarProducts: false, fetchSimilarProductsError: action.payload }
     default:
       return state
   }

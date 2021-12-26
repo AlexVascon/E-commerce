@@ -71,7 +71,7 @@ export const fetchProductDetails = async (req,res, next) => {
 }
 
 // similar products based on current viewed product in browser
-export const fetchProductSuggestions = async (req,res, next) => {
+export const fetchSimilarProducts = async (req,res, next) => {
   try {
     const {productId} = req.params
     const product = await Product.findById(productId).lean()

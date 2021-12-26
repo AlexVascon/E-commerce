@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react'
-import {useParams} from 'react-router-dom'
+import {useParams, Link } from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import {authenticate} from '../actions/userActions'
-import { fetchProductInformation, createProductReview, fetchProductReviews } from '../actions/productActions'
+import { fetchProductInformation, createProductReview, fetchProductReviews, fetchSimilarProducts } from '../actions/productActions'
 import { addItemToCart } from '../actions/cartActions'
 import { ViewResponsive, Section, List, Row, RowText, RowResponsive } from '../components/View'
 import { Form, TextArea } from '../components/Form'
@@ -14,6 +14,10 @@ import ExpandLessOutlinedIcon from '@mui/icons-material/ExpandLessOutlined'
 import ReactStars from 'react-rating-stars-component'
 import Dialog from '@mui/material/Dialog'
 import { useSnackbar } from 'notistack'
+import SwipeableViews from 'react-swipeable-views'
+import { autoPlay } from 'react-swipeable-views-utils'
+import cardBackgroundImg from '../assets/donught_corner_img.jpg'
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews)
 
 export default function Product() {
   const {productId} = useParams()
@@ -21,6 +25,7 @@ export default function Product() {
   const {reviewSuccess} = useSelector((state) => state.createProductReview)
   const {reviews} = useSelector((state) => state.fetchProductReviews)
   const {foundProductInformation} = useSelector((state) => state.fetchProductInformation)
+  const {similarProducts} = useSelector((state) => state.fetchSimilarProducts)
   const {userInfo} = useSelector((state) => state.authenticate)
   const { enqueueSnackbar } = useSnackbar();
   const [openDescription, setOpenDescription] = useState(false)
@@ -36,6 +41,7 @@ export default function Product() {
 
   useEffect(() => {
     dispatch(fetchProductInformation(productId))
+    dispatch(fetchSimilarProducts(productId))
   }, [dispatch, productId])
 
   useEffect(() => {
@@ -91,7 +97,7 @@ export default function Product() {
       </Display>
       </Section>
       <Section>
-        <List>
+        <Information>
         <Row onClick={() => setOpenReviews(!openReviews)}>
           <RowText>Reviews {reviews && reviews.list?.length}</RowText>
           {!openReviews ?
@@ -161,7 +167,19 @@ export default function Product() {
             <Description>{foundProductInformation && foundProductInformation.description}</Description>
           </DescriptionContainer>
           }
-        </List>
+        </Information>
+        <SubTitle>Similar products</SubTitle>
+        <SimilarProducts>
+        <AutoPlaySwipeableViews slideClassName='item-suggestions-carousel'>
+        {similarProducts && similarProducts.map(product => {
+          return (
+            <Link key={product._id} to={`/product/${product._id}`}>
+            <SimilarImage src={product.image} />
+            </Link>
+          )
+        })}
+        </AutoPlaySwipeableViews>
+        </SimilarProducts>
         {foundProductInformation?.quantity > 0 ? 
           <AddToCartButton onClick={handleClickAddItemToCart('success')}>ADD TO CART</AddToCartButton>
           :
@@ -178,7 +196,6 @@ const Display = styled.div`
  position: relative;
  width: 100%;
 `
-
 const Title = styled.h2`
 position: absolute;
   bottom: 3%;
@@ -199,7 +216,6 @@ padding: .5rem .8rem;
   background-color: rgba(94, 94, 94, 0.945);
   color: white;
 `
-
 const Image = styled.img`
 `
 const ImageContainer = styled.div`
@@ -207,6 +223,17 @@ position: absolute;
   bottom: 15%;
   right: 0%;
   z-index: 1;
+`
+const Information = styled(List)`
+flex: 2;
+margin: auto;
+margin-top: 1rem;
+justify-content: center;
+align-items: center;
+text-align: center;
+padding: 0;
+width: 100%;
+margin-bottom: 1rem;
 `
 const DescriptionContainer = styled.div`
  display: flex;
@@ -221,7 +248,6 @@ const ProductRating = styled.div`
 position: absolute;
 right: 30%;
 `
-
 const ReviewsContainer = styled.div`
 display: flex;
   flex-direction: column;
@@ -248,9 +274,37 @@ const AddToCartButton = styled(Button)`
 width: 90%;
 justify-self: center;
 margin: auto;
+margin-top: 1rem;
 margin-bottom: 3rem;
 `
+const SubTitle = styled.h1`
+  width: 100%;
+  text-align: left;
+  padding-left: 1.5rem;
+  font-weight: 700;
+  color: rgba(235, 198, 36, 0.945);
+  font-size: 1.5rem;
+`
 
+const SimilarProducts = styled.div`
+flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(212, 212, 212, 0.185);
+`
+const SimilarImage = styled.img`
+height: 18rem;
+width: 13rem;
+  background-image: url(${cardBackgroundImg});
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 0 2rem;
+  border-radius: .2rem;
+  display: flex;
+  justify-content: center;
+`
 
 
 

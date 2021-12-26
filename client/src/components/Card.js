@@ -70,12 +70,27 @@ width: 60%;
   z-index: 1;
   background-color: transparent;
 `
+const Rating = styled.div`
+position: absolute;
+  top: 1%;
+  width: 10rem;
+  left: 5%;
+  padding: 0;
+  margin: auto;
+  z-index: 6;
+`
+const NoRating = styled.p`
+color: #777;
+margin: 0%;
+`
 
 const Card = {
   Container,
   Title,
   Price,
-  Image
+  Image,
+  Rating,
+  NoRating
 }
 
 export default Card

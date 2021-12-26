@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react'
-import {useParams, Link} from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../actions/productActions'
 import { Image } from '../components/Image'
 import {View, Section} from '../components/View'
-import MenImg from '../assets/ruthson-zimmerman-hDANeGXvWRw-unsplash.jpg'
-import WomenImg from '../assets/zeny-rosalina-Z3tc0Bfv0c4-unsplash.jpg'
-import styled from 'styled-components'
+import MenImg from '../assets/men.jpg'
+import WomenImg from '../assets/women.jpg'
+import styled, {css} from 'styled-components'
 import Card from '../components/Card'
 import ReactPaginate from 'react-paginate'
+import ReactStars from 'react-rating-stars-component'
 
 
 export default function Selection() {
@@ -17,11 +18,9 @@ export default function Selection() {
   const {foundProducts} = useSelector((state) => state.fetchProducts)
   const [category, setCategory] = useState('shirt') // default
   const [pageNumber, setPageNumber] = useState(0)
-  const [restPagnation, setResetPagnation] = useState(true)
 
   const requestCategory = (category) => {
     setCategory(category)
-    setResetPagnation(true)
     setPageNumber(pageNumber => pageNumber = 0)
   }
 
@@ -56,9 +55,9 @@ export default function Selection() {
     <Section>
       <Image imageUrl={process.env.PUBLIC_URL + gender === 'women' ? WomenImg : MenImg}>
       <Categories>
-        <List onClick={() => requestCategory('shirt')}>SHIRT</List>
-        <List onClick={() => requestCategory('jumper')}>JUMPER</List>
-        <List onClick={() => requestCategory(gender === 'women' ? 'dress' : 'suit')}>{gender === 'women' ? 'DRESS' : 'SUIT'}</List>
+        <List isActive={category === 'shirt'} onClick={() => requestCategory('shirt')}>SHIRT</List>
+        <List isActive={category === 'jumper'} onClick={() => requestCategory('jumper')}>JUMPER</List>
+        <List isActive={(gender === 'men' && category === 'suit') || (gender === 'women' && category === 'dress')} onClick={() => requestCategory(gender === 'women' ? 'dress' : 'suit')}>{gender === 'women' ? 'DRESS' : 'SUIT'}</List>
       </Categories>
       </Image>
     </Section>
@@ -66,8 +65,16 @@ export default function Selection() {
     <SelectionItems>
     {foundProducts && foundProducts.products.map(item => {
       return (
-        
       <Card.Container to={`/product/${item._id}`} key={item._id} >
+      <Card.Rating>
+        <ReactStars
+          count={5}
+          value={item.rating || 0}
+          size={25}
+          activeColor="#ffd700"
+        />
+      {!item.rating && <Card.NoRating>No Rating</Card.NoRating>}
+      </Card.Rating>
       <Card.Image src={item.image}  />
       <Card.Title>{item.title}</Card.Title>
       <Card.Price>${item.price}</Card.Price>
@@ -94,6 +101,12 @@ const List = styled.ul`
 display: flex;
 list-style-type: none;
 padding: 0;
+&:hover {
+    cursor: pointer;
+  }
+${(props) => props.isActive && css`
+text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;
+`}
 `
 
 const SelectionItems = styled.div`

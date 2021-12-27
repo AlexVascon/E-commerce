@@ -24,7 +24,10 @@ export default function Navbar() {
   return (
     <Nav>
       <HomeLink to='/'>Shop</HomeLink>
-      <MenuIcon fontSize='large' onClick={toggleNavMenu(true)} />
+      <Test>
+      <MobileMenu fontSize='large' onClick={toggleNavMenu(true)} />
+      </Test>
+     
       <Drawer
         anchor={'right'}
         open={open}
@@ -40,6 +43,15 @@ export default function Navbar() {
         <NavLink to='/about'>About</NavLink>
       </List> 
       </Drawer>
+      <DesktopMenu>
+        {!isLoggedIn && <DesktopLink to='/portal'>Portal</DesktopLink> }
+        {isLoggedIn && <DesktopLink to='/account'>Account</DesktopLink>} 
+        {isLoggedIn && <DesktopLink to='/cart'>Cart</DesktopLink>} 
+        <DesktopLink to={'/selection/men'}>Men</DesktopLink> 
+        <DesktopLink to={'/selection/women'}>Women</DesktopLink> 
+
+        <DesktopLink to='/about'>About</DesktopLink>
+      </DesktopMenu>
     </Nav>
   )
 }
@@ -78,4 +90,33 @@ const HomeLink = styled(Link)`
 text-decoration: none;
 color: white;
 font-size: 2rem;
+`
+const Test = styled.div`
+@media(min-width: 600px) {
+  display: none;
+  display: hidden;
+  border: 1px solid red;
+}
+`
+const MobileMenu = styled(MenuIcon)`
+display: none;
+display: hidden;
+&:hover {
+  cursor: pointer;
+}
+`
+const DesktopMenu = styled.ul`
+display: none;
+@media(min-width: 600px) {
+  display: flex;
+gap: 4rem;
+align-items: center;
+justify-content: center;
+color: white;
+}
+`
+const DesktopLink = styled(Link)`
+text-decoration: none;
+color: white;
+font-size: 1.2rem;
 `

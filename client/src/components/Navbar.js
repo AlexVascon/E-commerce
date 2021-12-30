@@ -1,10 +1,16 @@
 import React, {useState, useEffect} from 'react'
+import { useDispatch, useSelector} from 'react-redux'
+import { fetchCartItems } from '../actions/cartActions'
 import styled from 'styled-components'
 import MenuIcon from '@mui/icons-material/Menu'
 import Drawer from '@mui/material/Drawer'
 import { Link } from 'react-router-dom'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import Badge from '@mui/material/Badge';
 
 export default function Navbar() {
+  const dispatch = useDispatch()
+  const {cart} = useSelector((state) => state.fetchCartItems)
   const accessToken = localStorage.getItem('accessToken')
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [open, setOpen] = useState(false)
@@ -20,6 +26,10 @@ export default function Navbar() {
     if(accessToken) setIsLoggedIn(true)
     else setIsLoggedIn(false)
   }, [accessToken])
+
+  useEffect(() => {
+    dispatch(fetchCartItems())
+  }, [dispatch])
 
   return (
     <Nav>
@@ -49,6 +59,9 @@ export default function Navbar() {
         <DesktopLink to={'/selection/women'}>Women</DesktopLink> 
         <DesktopLink to='/about'>About</DesktopLink>
       </DesktopMenu>
+      <Badge badgeContent={cart && cart.items.length} color='secondary' >
+        <CartIcon color='white' />
+      </Badge>
     </Nav>
   )
 }
@@ -121,4 +134,7 @@ const DesktopLink = styled(Link)`
 text-decoration: none;
 color: white;
 font-size: 1.2rem;
+`
+const CartIcon = styled(ShoppingCartIcon)`
+color: white;
 `

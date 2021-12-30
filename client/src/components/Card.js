@@ -83,7 +83,6 @@ const NoRating = styled.p`
 color: #777;
 margin: 0%;
 `
-
 const Card = {
   Container,
   Title,

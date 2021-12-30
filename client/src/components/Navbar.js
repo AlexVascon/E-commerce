@@ -27,7 +27,6 @@ export default function Navbar() {
       <Test>
       <MobileMenu fontSize='large' onClick={toggleNavMenu(true)} />
       </Test>
-     
       <Drawer
         anchor={'right'}
         open={open}
@@ -39,7 +38,6 @@ export default function Navbar() {
         {isLoggedIn && <NavLink to='/cart'>Cart</NavLink>} 
         <NavLink to={'/selection/men'}>Men</NavLink> 
         <NavLink to={'/selection/women'}>Women</NavLink> 
-
         <NavLink to='/about'>About</NavLink>
       </List> 
       </Drawer>
@@ -49,7 +47,6 @@ export default function Navbar() {
         {isLoggedIn && <DesktopLink to='/cart'>Cart</DesktopLink>} 
         <DesktopLink to={'/selection/men'}>Men</DesktopLink> 
         <DesktopLink to={'/selection/women'}>Women</DesktopLink> 
-
         <DesktopLink to='/about'>About</DesktopLink>
       </DesktopMenu>
     </Nav>
@@ -57,13 +54,15 @@ export default function Navbar() {
 }
 
 const Nav = styled.nav`
-width: 100%;
-height: 7%;
-display: flex;
-justify-content: space-around;
-align-items: center;
-background-color: black;
-color: white;
+  margin: 0 !important;
+  width: 100%;
+  position: relative;
+  align-items: center;
+  justify-content: space-around;
+  top: 0px;
+  float:left;
+  background-color: black;
+  display: flex;
 `
 
 const List = styled.ul`
@@ -95,12 +94,14 @@ const Test = styled.div`
 @media(min-width: 600px) {
   display: none;
   display: hidden;
-  border: 1px solid red;
 }
 `
 const MobileMenu = styled(MenuIcon)`
-display: none;
-display: hidden;
+color: white;
+@media(min-width: 600px) {
+  display: none;
+  display: hidden;
+}
 &:hover {
   cursor: pointer;
 }
@@ -108,6 +109,7 @@ display: hidden;
 const DesktopMenu = styled.ul`
 display: none;
 @media(min-width: 600px) {
+  height: 100%;
   display: flex;
 gap: 4rem;
 align-items: center;

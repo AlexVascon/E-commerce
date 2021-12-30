@@ -11,7 +11,7 @@ html {
    height: -webkit - fill - available;
 }
 
-${'' /* easily style pagination component from external library */}
+${'' /* style pagination component */}
 .pagination-btns {
   width: 100%;
   height: 40px;
@@ -27,6 +27,9 @@ ${'' /* easily style pagination component from external library */}
   border-radius: 5px;
   border: 1px solid grey;
   color: grey;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .pagination-active a {
@@ -40,5 +43,8 @@ ${'' /* style pagination library */}
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (min-width: 500px) {
+  height: 20rem;
+}
 }
 `

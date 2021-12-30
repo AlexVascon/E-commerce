@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { fetchCartItems, addItemToCart, removeFromCart } from '../actions/cartActions'
-import { View } from '../components/View'
+import { View, Heading, Container, List, Row, RowText, HoldImage, SubContainer, Button } from '../components/MyLibrary'
 import styled from 'styled-components'
-import CartItem from '../components/CartItem'
-import { Button } from '../components/Button'
 import {useNavigate} from 'react-router-dom'
+import cartImg from '../assets/cloudy_mountain_LIGHT.png'
 
 export default function Cart() {
   const navigate = useNavigate()
@@ -25,8 +24,7 @@ export default function Cart() {
     } 
   }, [cart])
 
-  // for smoother user experience without constant screen flash on update
-  const updateItemQuantity = (amount, itemId,index) => {
+  const updateItemQuantity = (amount, itemId,index) => { // for smoother user experience without constant screen flash on update
     let updatedCartItems = [...cartItems]
     updatedCartItems[index].quantity += amount 
     if(amount > 0) {
@@ -41,58 +39,104 @@ export default function Cart() {
   }
 
   return (
-    <View>
-      <Title>SHOPPING CART</Title>
-      <CartItem.List>
+    <View responsive imageUrl={process.env.PUBLIC_URL + cartImg}>
+      <Heading static left='1.5rem' size='1rem'>SHOPPING CART</Heading>
+      <CartItems scroll gap='0.7rem'>
       {cartItems && cartItems.map((item, index) => {
         return (
-          <CartItem.Item key={item.itemId} >
-          <CartItem.ImageContainer>
-            <CartItem.Image src={item.image} />
-          </CartItem.ImageContainer>
-          <CartItem.DescriptionContainer>
-            <CartItem.Title>{item.name}</CartItem.Title>
-            <CartItem.Price>${item.price}</CartItem.Price>
-          </CartItem.DescriptionContainer>
-          <CartItem.EditContainer>
-            <CartItem.Button onClick={() => updateItemQuantity(1,item.itemId, index)}>+</CartItem.Button>
-            <CartItem.Quantity>{item && item.quantity}</CartItem.Quantity>
-            <CartItem.Button onClick={() => updateItemQuantity(-1,item.itemId, index)}>-</CartItem.Button>
-          </CartItem.EditContainer>
-        </CartItem.Item>
+          <Item height='10rem' shadow background='white' width='90%' key={item.itemId} >
+          <HoldImage background>
+            <img src={item.image} alt='' />
+          </HoldImage>
+          <Description flex='3' column>
+            <Name>{item.name}</Name>
+            <Price>${item.price}</Price>
+          </Description>
+          <Edit flex='1' column center >
+            <Increase onClick={() => updateItemQuantity(1,item.itemId, index)}>+</Increase>
+            <Quantity>{item && item.quantity}</Quantity>
+            <Decrease onClick={() => updateItemQuantity(-1,item.itemId, index)}>-</Decrease>
+          </Edit>
+        </Item>
         )
       })
       }
-      </CartItem.List>
-      <CartItem.CostList>
-        <CartItem.CostRow>
-          <CartItem.RowText>Total</CartItem.RowText>
-          <CartItem.RowText>${totalPrice && totalPrice}</CartItem.RowText>
-        </CartItem.CostRow>
-        <CartItem.CostRow>
-          <CartItem.RowText>Taxes</CartItem.RowText>
-          <CartItem.RowText>${(cart && cart.taxPrice) || 0}</CartItem.RowText>
-        </CartItem.CostRow>
-        <CartItem.CostRow>
-          <CartItem.RowText>Delivery</CartItem.RowText>
-          <CartItem.RowText>Free</CartItem.RowText>
-        </CartItem.CostRow>
+      </CartItems>
+      <PricingInformation>
+        <Row>
+          <RowText>Total</RowText>
+          <RowText>${totalPrice && totalPrice}</RowText>
+        </Row>
+        <Row>
+          <RowText>Taxes</RowText>
+          <RowText>${(cart && cart.taxPrice) || 0}</RowText>
+        </Row>
+        <Row>
+          <RowText>Delivery</RowText>
+          <RowText>Free</RowText>
+        </Row>
+        <ButtonContainer>
         {(!cart?.items?.length) ?
-          <Button disabled>CHECKOUT</Button>
+          <Button light disabled>CHECKOUT</Button>
           :
-          <Button onClick={() => navigate('/checkout')}>CHECKOUT</Button>
+          <Button light onClick={() => navigate('/checkout')}>CHECKOUT</Button>
          }
-      </CartItem.CostList>
+         </ButtonContainer>
+      </PricingInformation>
     </View>
   )
 }
 
-const Title = styled.h1`
-  width: 100%;
-  text-align: left;
-  padding-left: 1.5rem;
-  font-weight: 700;
-  color: rgba(235, 198, 36, 0.945);
-  font-size: 1rem;
+const CartItems = styled(List)`
+flex: 1.5;
 `
+const PricingInformation = styled(List)``
+const Item = styled(Container)``
+const Description = styled(SubContainer)``
+const Edit = styled(SubContainer)``
+
+const Name = styled.b`
+font-size: 1.4rem;
+color: rgba(235, 198, 36, 0.945);
+margin: auto;
+margin-left: .5rem;
+padding-top: 3rem;
+overflow-wrap: break-word;
+`
+const Price = styled.span`
+color: white;
+text-align: center;
+width: 4rem;
+margin: auto;
+border-radius: 1rem;
+padding: .3rem 0;
+margin-left: .5rem;
+margin-bottom: .5rem;
+background-color: rgba(29, 29, 29, 0.527);
+`
+const ButtonContainer = styled.div`
+flex: .5;
+button {
+  width: 25rem;
+}
+`
+const EditButton = styled.button`
+ flex: 2;
+  background: none;
+  font-size: 2rem;
+  border: none;
+  color: rgba(94, 94, 94, 0.637);
+  &:hover {
+    cursor: pointer;
+  }
+`
+const Increase = styled(EditButton)``
+const Decrease = styled(EditButton)``
+
+const Quantity = styled.span`
+color: rgba(235, 198, 36, 0.945);
+font-weight: bold;
+font-size: 1.2rem;
+`
+
 

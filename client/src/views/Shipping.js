@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { saveShippingInformation, fetchShippingInformation } from '../actions/userActions'
-import { View, Error } from '../components/View'
-import shippingImg from '../assets/shipping_background.jpg'
+import { View, Button, Error } from '../components/MyLibrary'
+import shippingImg from '../assets/cloudy_mountain_DARK.jpg'
 import { Form, FormGroup, Input } from '../components/Form'
-import { Button } from '../components/Button'
 
 export default function Shipping() {
   const dispatch = useDispatch()
@@ -54,7 +53,7 @@ export default function Shipping() {
           <Input type='text' placeholder={shippingInformation?.postCode || 'post code'} onChange={handlePostCodeChange} />
         </FormGroup>
         <Input type='text' placeholder={shippingInformation?.streetAddress || 'streetAddress'} onChange={handleStreetAddressChange} />
-        <Button light={true} type='submit'>
+        <Button light type='submit'>
           SAVE
         </Button>
       </Form>

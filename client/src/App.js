@@ -36,7 +36,7 @@ export default function App() {
         </Route>
         <Route path='/selection/:gender' element={<Selection />} />
         <Route path='/product/:productId' element={<Product />} />
-        <Route path='/order/details' element={<OrderDetails />} />
+        <Route path='/order/:orderId' element={<OrderDetails />} />
         <Route path='/' element={<Home />} />
       </Routes>
     </AppContainer>

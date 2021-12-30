@@ -11,11 +11,7 @@ export const createOrder = async (req,res,next) => {
     const cart = await Cart.findOne({userId: req.user._id})
     const shipping = await Shipping.findOne({userId: req.user._id}).lean()
     const order = await new Order({
-      userId: req.user._id,
-      contact: {
-        email: shipping.information.email,
-        phoneNumber: shipping.information.phoneNumber
-      },
+      user: req.user._id,
       items: cart.items, 
       shippingAddress: {
         address: shipping.information.streetAddress,
@@ -26,7 +22,6 @@ export const createOrder = async (req,res,next) => {
       },
       paymentMethod: 'card', // default for now
       taxPrice: cart.taxPrice,
-      isPaid: false,
       totalPrice: cart.totalCost,
     })
     await order.save()
@@ -49,7 +44,7 @@ export const createOrder = async (req,res,next) => {
 
 export const fetchOrder = async (req,res,next) => {
   try {
-    const order = await Order.findById(req.params.orderId).lean()
+    const order = await Order.findById(req.params.orderId).populate('user', 'username email')
     res.status(200).send(order)
   } catch (err) {
     next(err)

@@ -29,7 +29,7 @@ export default function MyOrders() {
         {myOrders &&
           myOrders.map((order) => {
             return (
-              <Row>
+              <Row key={order._id}>
                 <Data>{order.items.length}</Data>
                 <Data>{order.createdAt.substring(0, 10)}</Data>
                 <Data>${order.totalPrice}</Data>
@@ -41,6 +41,11 @@ export default function MyOrders() {
                       Pay
                     </Button>
                   )}
+                </Data>
+                <Data>
+                    <Button onClick={() => navigate(`/order/${order._id}`)}>
+                      Details
+                    </Button>
                 </Data>
               </Row>
             )

@@ -71,11 +71,16 @@ export const authenticate = () => async (dispatch) => {
     const {data} = await instance.get('/user/verify')
     dispatch({ type: AUTHENTICATION_SUCCESS, payload: data })
   } catch (error) {
+    const message =
+     error.response && error.response.data.messages
+      ? error.response.data.messages
+      : error.messages
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout())
+    }
     dispatch({
       type: AUTHENTICATION_FAIL,
-      payload: error.response && error.response.data.messages
-      ? error.response.data.messages
-      : error.messages,
+      payload: message,
     })
   }
 }

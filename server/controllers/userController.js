@@ -68,8 +68,9 @@ export const editUser = async (req, res, next) => {
     const user = await User.findById(req.user._id)
     user.username = req.body.username || user.username
     user.email = req.body.email || user.email
-    user.password = req.body.password || user.password
-
+    if(req.body.password === req.body.confirmPassword) {
+      user.password = req.body.password || user.password
+    }
     await user.save()
     res.status(200).send({message: 'update successful'})
   } catch (err) {

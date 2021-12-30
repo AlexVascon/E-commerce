@@ -7,6 +7,9 @@ import {
   LOGIN_FAIL,
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
+  EDIT_USER_REQUEST,
+  EDIT_USER_SUCCESS,
+  EDIT_USER_FAIL,
   AUTHENTICATION_REQUEST,
   AUTHENTICATION_SUCCESS,
   AUTHENTICATION_FAIL,
@@ -63,6 +66,19 @@ export const authenticationReducer = (state = {}, action) => {
       return { authenticationLoading: false, userInfo: action.payload }
     case AUTHENTICATION_FAIL:
       return { authenticationLoading: false, authenticationError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const editUserReducer = (state = {}, action) => {
+  switch (action.type) {
+    case EDIT_USER_REQUEST:
+      return { loadingEditUser: true }
+    case EDIT_USER_SUCCESS:
+      return { loadingEditUser: false, user: action.payload }
+    case EDIT_USER_FAIL:
+      return { loadingEditUser: false, editUserError: action.payload }
     default:
       return state
   }

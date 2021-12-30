@@ -1,10 +1,35 @@
-import { createStore, combineReducers, applyMiddleware} from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { fetchProductsReducer, fetchProductInformationReducer, fetchProductReviewsReducer, createProductReviewReducer, fetchSimilarProductsReducer, fetchTopProductsReducer } from './reducers/productReducer'
-import { registerReducer, authenticationReducer, saveShippingInformationReducer, fetchShippingInformationReducer, loginReducer, logoutReducer } from './reducers/userReducer'
-import { addCartItemToAnonymousReducer, addItemToCartReducer, fetchCartItemsReducer, removeCartItemReducer } from './reducers/cartReducer'
-import { createOrderReducer, fetchMyOrdersReducer, fetchOrderReducer, payOrderReducer } from './reducers/orderReducer'
+import {
+  fetchProductsReducer,
+  fetchProductInformationReducer,
+  fetchProductReviewsReducer,
+  createProductReviewReducer,
+  fetchSimilarProductsReducer,
+  fetchTopProductsReducer,
+} from './reducers/productReducer'
+import {
+  registerReducer,
+  authenticationReducer,
+  saveShippingInformationReducer,
+  fetchShippingInformationReducer,
+  loginReducer,
+  logoutReducer,
+  editUserReducer
+} from './reducers/userReducer'
+import {
+  addCartItemToAnonymousReducer,
+  addItemToCartReducer,
+  fetchCartItemsReducer,
+  removeCartItemReducer,
+} from './reducers/cartReducer'
+import {
+  createOrderReducer,
+  fetchMyOrdersReducer,
+  fetchOrderReducer,
+  payOrderReducer,
+} from './reducers/orderReducer'
 
 const reducer = combineReducers({
   fetchProducts: fetchProductsReducer,
@@ -13,6 +38,7 @@ const reducer = combineReducers({
   login: loginReducer,
   logout: logoutReducer,
   authenticate: authenticationReducer,
+  editUser: editUserReducer,
   saveShippingInformation: saveShippingInformationReducer,
   fetchShippingInformation: fetchShippingInformationReducer,
   fetchProductReviews: fetchProductReviewsReducer,
@@ -32,8 +58,10 @@ const initialState = {}
 
 const middleware = [thunk]
 
-const store = createStore(reducer, initialState, 
-    composeWithDevTools(applyMiddleware(...middleware))
+const store = createStore(
+  reducer,
+  initialState,
+  composeWithDevTools(applyMiddleware(...middleware))
 )
 
 export default store

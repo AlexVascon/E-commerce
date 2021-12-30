@@ -16,6 +16,7 @@ import Checkout from './views/Checkout'
 import PrivateRoute from './components/PrivateRoute'
 import MyOrders from './views/MyOrders'
 import OrderDetails from './views/OrderDetails'
+import UserEdit from './views/UserEdit'
 
 export default function App() {
   return (
@@ -29,14 +30,15 @@ export default function App() {
         <Route element={<PrivateRoute />} >
           <Route path='/shipping' element={<Shipping />} />
           <Route path='/account' element={<Account />} />
+          <Route path='/user/edit' element={<UserEdit />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/checkout' element={<Checkout />} />
           <Route path='/order/pay/:orderId' element={<Pay />} />
           <Route path='/my-orders' element={<MyOrders />} />
+          <Route path='/order/:orderId' element={<OrderDetails />} />
         </Route>
         <Route path='/selection/:gender' element={<Selection />} />
         <Route path='/product/:productId' element={<Product />} />
-        <Route path='/order/:orderId' element={<OrderDetails />} />
         <Route path='/' element={<Home />} />
       </Routes>
     </AppContainer>

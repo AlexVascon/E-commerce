@@ -16,7 +16,7 @@ export default function Account() {
       <LinkText to='/shipping'>Shipping address</LinkText>
       <LinkText to='/cart'>Cart</LinkText>
       <LinkText to='/my-orders'>Orders</LinkText>
-      <LinkText to='/edit-account'>Edit account</LinkText>
+      <LinkText to='/user/edit'>Edit account</LinkText>
       <Text onClick={() => { 
         dispatch(logout())
         navigate('/portal')

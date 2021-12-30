@@ -25,6 +25,7 @@ export default function MyOrders() {
           <RowTitle>Date</RowTitle>
           <RowTitle>Total</RowTitle>
           <RowTitle>Paid</RowTitle>
+          <RowTitle>View</RowTitle>
         </Row>
         {myOrders &&
           myOrders.map((order) => {
@@ -80,4 +81,7 @@ const Button = styled.button`
   font-weight: 900;
   padding: 0.5rem;
   border-radius: 0.3rem;
+  &:hover {
+    cursor: pointer;
+  }
 `

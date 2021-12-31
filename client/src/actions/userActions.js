@@ -65,6 +65,13 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
   }
 }
 
+export const logout = () => (dispatch) => {
+  dispatch({type: LOGOUT_REQUEST})
+  localStorage.removeItem('accessToken')
+  dispatch({type: LOGOUT_SUCCESS})
+  document.location.href = '/portal'
+}
+
 export const authenticate = () => async (dispatch) => {
   try {
     dispatch({type: AUTHENTICATION_REQUEST})
@@ -83,12 +90,6 @@ export const authenticate = () => async (dispatch) => {
       payload: message,
     })
   }
-}
-
-export const logout = () => (dispatch) => {
-    dispatch({type: LOGOUT_REQUEST})
-    localStorage.removeItem('accessToken')
-    dispatch({type: LOGOUT_SUCCESS})
 }
 
 export const userEdit = (user) => async (dispatch) => {

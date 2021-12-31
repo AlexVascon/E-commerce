@@ -1,18 +1,21 @@
 import React, {useState, useEffect} from 'react'
 import { useDispatch, useSelector} from 'react-redux'
 import { fetchCartItems } from '../actions/cartActions'
+import { authenticate } from '../actions/userActions'
 import styled from 'styled-components'
 import MenuIcon from '@mui/icons-material/Menu'
 import Drawer from '@mui/material/Drawer'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import Badge from '@mui/material/Badge';
 
 export default function Navbar() {
   const dispatch = useDispatch()
   const {cart} = useSelector((state) => state.fetchCartItems)
+  const {userInfo} = useSelector((state) => state.authenticate)
   const accessToken = localStorage.getItem('accessToken')
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState(undefined)
   const [open, setOpen] = useState(false)
 
   const toggleNavMenu = (state) => (event) => {
@@ -31,12 +34,26 @@ export default function Navbar() {
     dispatch(fetchCartItems())
   }, [dispatch])
 
+  // get auth
+  useEffect(() => {
+    if(!user) dispatch(authenticate())
+  }, [dispatch, user])
+
+  // set auth
+  useEffect(() => {
+    if(userInfo) setUser(userInfo)
+  }, [userInfo])
+
   return (
     <Nav>
       <HomeLink to='/'>Shop</HomeLink>
-      <Test>
+      <MobileMenuContainer >
       <MobileMenu fontSize='large' onClick={toggleNavMenu(true)} />
-      </Test>
+      <CartCounter badgeContent={cart && cart.items.length} >
+        <CartIcon color='white' />
+      </CartCounter>
+      </MobileMenuContainer>
+     
       <Drawer
         anchor={'right'}
         open={open}
@@ -46,6 +63,8 @@ export default function Navbar() {
         {!isLoggedIn && <NavLink to='/portal'>Portal</NavLink> }
         {isLoggedIn && <NavLink to='/account'>Account</NavLink>} 
         {isLoggedIn && <NavLink to='/cart'>Cart</NavLink>} 
+        {user?.isAdmin && <NavLink to='/product/all'>Products</NavLink>}
+        {user?.isAdmin && <NavLink to='/product/create'>Create</NavLink>}
         <NavLink to={'/selection/men'}>Men</NavLink> 
         <NavLink to={'/selection/women'}>Women</NavLink> 
         <NavLink to='/about'>About</NavLink>
@@ -55,13 +74,12 @@ export default function Navbar() {
         {!isLoggedIn && <DesktopLink to='/portal'>Portal</DesktopLink> }
         {isLoggedIn && <DesktopLink to='/account'>Account</DesktopLink>} 
         {isLoggedIn && <DesktopLink to='/cart'>Cart</DesktopLink>} 
+        {user?.isAdmin && <DesktopLink to='/product/all'>Products</DesktopLink>}
+        {user?.isAdmin && <DesktopLink to='/product/create'>Create</DesktopLink>}
         <DesktopLink to={'/selection/men'}>Men</DesktopLink> 
         <DesktopLink to={'/selection/women'}>Women</DesktopLink> 
         <DesktopLink to='/about'>About</DesktopLink>
       </DesktopMenu>
-      <Badge badgeContent={cart && cart.items.length} color='secondary' >
-        <CartIcon color='white' />
-      </Badge>
     </Nav>
   )
 }
@@ -74,6 +92,8 @@ const Nav = styled.nav`
   justify-content: space-around;
   top: 0px;
   float:left;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
   background-color: black;
   display: flex;
 `
@@ -92,18 +112,21 @@ font-size: 1.5rem;
 background-color: black;
 `
 
-const NavLink = styled(Link)`
+const MobileLink = styled(NavLink)`
 text-decoration: none;
 color: white;
 margin-top: 1rem;
 `
 
-const HomeLink = styled(Link)`
+const HomeLink = styled(NavLink)`
 text-decoration: none;
 color: white;
 font-size: 2rem;
 `
-const Test = styled.div`
+const MobileMenuContainer = styled.div`
+display: flex;
+align-items: center;
+gap: 1rem;
 @media(min-width: 600px) {
   display: none;
   display: hidden;
@@ -124,16 +147,32 @@ display: none;
 @media(min-width: 600px) {
   height: 100%;
   display: flex;
-gap: 4rem;
+gap: 2rem;
 align-items: center;
 justify-content: center;
 color: white;
 }
+@media(min-width: 700px) {
+gap: 3rem;
+}
 `
-const DesktopLink = styled(Link)`
+const DesktopLink = styled(NavLink)`
 text-decoration: none;
 color: white;
-font-size: 1.2rem;
+font-size: .8rem;
+&.active {
+    color: rgba(235, 198, 36, 0.945);
+  }
+@media(min-width: 700px) {
+  font-size: 1.2rem;
+}
+
+`
+const CartCounter = styled(Badge)`
+.MuiBadge-badge {
+  background-color: rgba(235, 198, 36, 0.945);
+  font-weight: bold;
+}
 `
 const CartIcon = styled(ShoppingCartIcon)`
 color: white;

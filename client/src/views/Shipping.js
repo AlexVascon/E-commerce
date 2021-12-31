@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { saveShippingInformation, fetchShippingInformation } from '../actions/userActions'
-import { View, Button, Error } from '../components/MyLibrary'
+import { View, Button, Error, SubTitle } from '../components/MyLibrary'
 import shippingImg from '../assets/cloudy_mountain_DARK.jpg'
 import { Form, FormGroup, Input } from '../components/Form'
 
@@ -41,6 +41,7 @@ export default function Shipping() {
     <View imageUrl={process.env.PUBLIC_URL + shippingImg}>
     {saveShippingInformationError && <Error>{saveShippingInformationError}</Error>}
       <Form onSubmit={onShippingAddressSubmit}>
+      <SubTitle>Shipping Information</SubTitle>
         <Input type='text' placeholder={shippingInformation?.fullName || 'Full name'} onChange={handleFullNameChange} />
         <Input type='text' placeholder={shippingInformation?.phoneNumber || 'Phone number'} onChange={handlePhoneNumberChange} />
         <Input type='email' placeholder={shippingInformation?.email || 'email'} onChange={handleEmailChange} />

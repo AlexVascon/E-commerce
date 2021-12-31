@@ -8,6 +8,10 @@ import {
   createProductReviewReducer,
   fetchSimilarProductsReducer,
   fetchTopProductsReducer,
+  createProductReducer,
+  updateProductReducer,
+  fetchAllProductsReducer,
+  deleteProductReducer,
 } from './reducers/productReducer'
 import {
   registerReducer,
@@ -33,6 +37,7 @@ import {
 
 const reducer = combineReducers({
   fetchProducts: fetchProductsReducer,
+  fetchAllProducts: fetchAllProductsReducer,
   fetchProductInformation: fetchProductInformationReducer,
   register: registerReducer,
   login: loginReducer,
@@ -45,6 +50,9 @@ const reducer = combineReducers({
   createProductReview: createProductReviewReducer,
   fetchSimilarProducts: fetchSimilarProductsReducer,
   fetchTopProducts: fetchTopProductsReducer,
+  createProduct: createProductReducer,
+  deleteProduct: deleteProductReducer,
+  updateProduct: updateProductReducer,
   addCartItemToAnonymous: addCartItemToAnonymousReducer,
   addItemToCart: addItemToCartReducer,
   fetchCartItems: fetchCartItemsReducer,

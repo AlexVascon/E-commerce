@@ -3,27 +3,17 @@ import Review from '../models/reviewModel.js'
 
 export const createProduct = async (req,res,next) => {
   try {
-    const {title, imageURL, description, price, quantity, selection, category} = req.body
-    const newProduct = await new Product({
-      title: title, 
-      image: imageURL, 
-      description: description,
-      price: price,
-      quantity: quantity, 
-      selection: selection, 
-      category: category
+    const product = await new Product({
+      title: req.body.name,
+      price: req.body.price,
+      quantity: req.body.quantity,
+      selection: req.body.selection,
+      category: req.body.category,
+      description: req.body.description,
+      image: req.body.imageURL
     })
-    await newProduct.save()
-    res.status(201).send({message: 'added succefully '})
-  } catch (err) {
-    next(err)
-  }
-}
-
-export const deleteProduct = async (req,res,next) => {
-  try {
-    await Product.findByIdAndDelete(req.params._id)
-    res.status(200).send({message: 'deleted'})
+    await product.save()
+    res.status(200).send(product)
   } catch (err) {
     next(err)
   }
@@ -84,8 +74,28 @@ export const fetchSimilarProducts = async (req,res, next) => {
 
 export const fetchAllProducts = async (req,res,next) => {
   try {
-    const products = await Product.find().lean()
-    res.status(200).send(products)
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit)
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+
+    const allProducts = await Product.find().lean()
+    if(endIndex < allProducts.length) {
+      results.next = {
+        page: page + 1,
+        limit: limit
+      }
+    }
+
+    if(startIndex > 0) {
+      results.previous = {
+        page: page - 1,
+        limit: limit
+      }
+    }
+    const products = await Product.find({}).limit(limit).skip(startIndex).exec()
+    res.status(200).send({products: products, count: allProducts.length, page: page })
   } catch (err) {
     next(err)
   }
@@ -94,7 +104,7 @@ export const fetchAllProducts = async (req,res,next) => {
 export const editProduct = async (req,res,next) => {
   try {
     const product = await Product.findById(req.body.productId)
-    product.title = req.body.title || product.title
+    product.title = req.body.name || product.title
     product.price = Number(req.body.price) || product.price
     product.category = req.body.category || product.category
     product.description = req.body.description || product.description
@@ -158,6 +168,16 @@ export const fetchTopProducts = async (req,res,next) => {
   try {
     const products = await Product.find({}).sort({rating: -1}).limit(3).lean()
     res.status(200).send(products)
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const deleteProduct = async (req,res,next) => {
+  try {
+    const product = await Product.findById(req.params.productId)
+    await product.remove()
+    res.status(200).send({message: 'product removed'})
   } catch (err) {
     next(err)
   }

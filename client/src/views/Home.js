@@ -33,7 +33,7 @@ export default function Home() {
           Top Products
         </Heading>
         <TopProducts>
-          {topProducts && (
+          {topProducts?.length && 
             <AutoPlaySwipeableViews slideClassName='item-suggestions-carousel'>
               {topProducts.map((product) => {
                 return (
@@ -43,7 +43,7 @@ export default function Home() {
                 )
               })}
             </AutoPlaySwipeableViews>
-          )}
+          }
         </TopProducts>
       </Section>
     </View>

@@ -43,5 +43,21 @@ border: 1px solid rgba(204, 174, 5, 0.945);
 border-radius: .5rem;
 padding: 1rem;
 height: 10rem;
-width: 95%;
+${props => props.dark && "background-color: rgba(187, 185, 185, 0.603); color: white; &::placeholder{ color: white;}"}
+`
+export const Select = styled.select`
+text-align: center;
+  padding: 1rem 0;
+  border: none;
+  color: white;
+  border-radius: .3rem;
+  background-color: rgba(187, 185, 185, 0.603);
+  &:focus {
+    outline: 2px solid rgba(253, 253, 185, 0.925);
+  }
+  &::placeholder {
+    color: white;
+    text-align: center;
+    font-weight: 600;
+  }
 `

@@ -17,6 +17,10 @@ import PrivateRoute from './components/PrivateRoute'
 import MyOrders from './views/MyOrders'
 import OrderDetails from './views/OrderDetails'
 import UserEdit from './views/UserEdit'
+import ProductCreate from './views/ProductCreate'
+import ProductUpdate from './views/ProductUpdate'
+import ProductList from './views/ProductList'
+import AdminRoute from './components/AdminRoute'
 
 export default function App() {
   return (
@@ -37,8 +41,13 @@ export default function App() {
           <Route path='/my-orders' element={<MyOrders />} />
           <Route path='/order/:orderId' element={<OrderDetails />} />
         </Route>
-        <Route path='/selection/:gender' element={<Selection />} />
+        <Route element={<AdminRoute />} >
+        <Route path='/product/all' element={<ProductList />} />
+        <Route path='/product/create' element={<ProductCreate />} />
+        <Route path='/product/update/:productId' element={<ProductUpdate />} />
+        </Route>
         <Route path='/product/:productId' element={<Product />} />
+        <Route path='/selection/:gender' element={<Selection />} />
         <Route path='/' element={<Home />} />
       </Routes>
     </AppContainer>

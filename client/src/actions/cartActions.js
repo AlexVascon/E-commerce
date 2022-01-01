@@ -26,7 +26,7 @@ export const addItemToCart = (productId) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -42,7 +42,7 @@ export const fetchCartItems = () => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -58,7 +58,7 @@ export const removeFromCart = (itemId) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }

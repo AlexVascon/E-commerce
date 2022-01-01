@@ -17,7 +17,7 @@ import {authenticateToken, admin} from '../middleware/authMiddleware.js'
 router.get('/category', fetchProducts)
 router.delete('/:productId', authenticateToken, admin, deleteProduct)
 router.post('/create', authenticateToken, admin, createProduct)
-router.post('/edit', authenticateToken, admin, editProduct)
+router.put('/edit', authenticateToken, admin, editProduct)
 router.post('/create/review', authenticateToken, createProductReview)
 router.get('/reviews', fetchAllReviews)
 router.get('/top', fetchTopProducts)

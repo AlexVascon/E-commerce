@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchTopProducts } from '../actions/productActions'
 import { Link } from 'react-router-dom'
-import { View, Heading, Section } from '../components/MyLibrary'
+import { View, Heading, Section, Error, LoadingSpinner } from '../components/MyLibrary'
 import styled from 'styled-components'
 import MenImg from '../assets/men.jpg'
 import WomenImg from '../assets/women.jpg'
@@ -13,11 +13,12 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews)
 
 export default function Home() {
   const dispatch = useDispatch()
-  const { topProducts } = useSelector((state) => state.fetchTopProducts)
+  const { topProducts, loadingFetchTopProducts, fetchTopProductsError } = useSelector((state) => state.fetchTopProducts)
 
   useEffect(() => {
     dispatch(fetchTopProducts())
   }, [dispatch])
+
   return (
     <View>
       <Section>
@@ -33,6 +34,8 @@ export default function Home() {
           Top Products
         </Heading>
         <TopProducts>
+        {loadingFetchTopProducts && <LoadingSpinner />}
+        {fetchTopProductsError && <Error>{fetchTopProductsError}</Error>}
           {topProducts?.length && 
             <AutoPlaySwipeableViews slideClassName='item-suggestions-carousel'>
               {topProducts.map((product) => {

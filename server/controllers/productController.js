@@ -103,9 +103,10 @@ export const fetchAllProducts = async (req,res,next) => {
 
 export const editProduct = async (req,res,next) => {
   try {
+    console.log('req.product:', req.body)
     const product = await Product.findById(req.body.productId)
     product.title = req.body.name || product.title
-    product.price = Number(req.body.price) || product.price
+    product.price = req.body.price || product.price
     product.category = req.body.category || product.category
     product.description = req.body.description || product.description
     product.image = req.body.image || product.image

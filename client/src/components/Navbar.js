@@ -13,8 +13,6 @@ export default function Navbar() {
   const dispatch = useDispatch()
   const {cart} = useSelector((state) => state.fetchCartItems)
   const {userInfo} = useSelector((state) => state.authenticate)
-  const accessToken = localStorage.getItem('accessToken')
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [user, setUser] = useState(undefined)
   const [open, setOpen] = useState(false)
 
@@ -24,11 +22,6 @@ export default function Navbar() {
     }
     setOpen(state)
   }
-
-  useEffect(() => {
-    if(accessToken) setIsLoggedIn(true)
-    else setIsLoggedIn(false)
-  }, [accessToken])
 
   useEffect(() => {
     dispatch(fetchCartItems())
@@ -60,20 +53,20 @@ export default function Navbar() {
         onClose={toggleNavMenu(false)}
         >
       <List>
-        {!isLoggedIn && <NavLink to='/portal'>Portal</NavLink> }
-        {isLoggedIn && <NavLink to='/account'>Account</NavLink>} 
-        {isLoggedIn && <NavLink to='/cart'>Cart</NavLink>} 
-        {user?.isAdmin && <NavLink to='/product/all'>Products</NavLink>}
-        {user?.isAdmin && <NavLink to='/product/create'>Create</NavLink>}
-        <NavLink to={'/selection/men'}>Men</NavLink> 
-        <NavLink to={'/selection/women'}>Women</NavLink> 
-        <NavLink to='/about'>About</NavLink>
+        {!user?.username && <MobileLink to='/portal'>Portal</MobileLink> }
+        {user?.username && <MobileLink to='/account'>Account</MobileLink>} 
+        {user?.username && <MobileLink to='/cart'>Cart</MobileLink>} 
+        {user?.isAdmin && <MobileLink to='/product/all'>Products</MobileLink>}
+        {user?.isAdmin && <MobileLink to='/product/create'>Create</MobileLink>}
+        <MobileLink to={'/selection/men'}>Men</MobileLink> 
+        <MobileLink to={'/selection/women'}>Women</MobileLink> 
+        <MobileLink to='/about'>About</MobileLink>
       </List> 
       </Drawer>
       <DesktopMenu>
-        {!isLoggedIn && <DesktopLink to='/portal'>Portal</DesktopLink> }
-        {isLoggedIn && <DesktopLink to='/account'>Account</DesktopLink>} 
-        {isLoggedIn && <DesktopLink to='/cart'>Cart</DesktopLink>} 
+        {!user?.username && <DesktopLink to='/portal'>Portal</DesktopLink> }
+        {user?.username && <DesktopLink to='/account'>Account</DesktopLink>} 
+        {user?.username && <DesktopLink to='/cart'>Cart</DesktopLink>} 
         {user?.isAdmin && <DesktopLink to='/product/all'>Products</DesktopLink>}
         {user?.isAdmin && <DesktopLink to='/product/create'>Create</DesktopLink>}
         <DesktopLink to={'/selection/men'}>Men</DesktopLink> 

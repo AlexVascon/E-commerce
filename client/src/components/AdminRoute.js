@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { Navigate, Outlet } from 'react-router'
 import instance from '../service/api'
+import { LoadingSpinner } from './MyLibrary'
 
 export default function AdminRoute() {
   const [user, setUser] = useState(undefined)
@@ -18,7 +19,7 @@ export default function AdminRoute() {
     fetchUser()
   }, [])
 
-  if(!user) return <p>Loading..</p>
+  if(!user) return <LoadingSpinner big />
   
   return user?.isAdmin ? <Outlet /> : <Navigate to='/portal' />
 }

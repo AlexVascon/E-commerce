@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchCartItems } from '../actions/cartActions'
 import { fetchShippingInformation } from '../actions/userActions'
 import { createOrder } from '../actions/orderActions'
-import { View, Row, RowText, Button } from '../components/MyLibrary'
+import { View, Row, RowText, Button, Error } from '../components/MyLibrary'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 
 export default function Checkout() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { cart } = useSelector((state) => state.fetchCartItems)
+  const { cart, fetchCartError } = useSelector((state) => state.fetchCartItems)
   const { shippingInformation } = useSelector(
     (state) => state.fetchShippingInformation
   )
@@ -27,6 +27,7 @@ export default function Checkout() {
 
   return (
     <View responsive>
+    {fetchCartError && <Error>{fetchCartError}</Error>}
       <OrderItems>
         {cart &&
           cart.items.map((item) => {
@@ -63,7 +64,7 @@ export default function Checkout() {
           )}
         </Row>
         {!cart?.items?.length || !shippingInformation ? (
-          <OrderButton disabled>CONFIRM ORDER</OrderButton>
+          <Message disabled>SHIPPING REQUIRED</Message>
         ) : (
           <OrderButton onClick={() => dispatch(createOrder())}>
             CONFIRM ORDER
@@ -147,6 +148,10 @@ const Quantity = styled.p`
 `
 const OrderButton = styled(Button)`
   margin-bottom: 2rem;
+`
+const Message = styled(Button)`
+background-color: transparent;
+box-shadow: none;
 `
 const AddShipping = styled(RowText)`
   color: red;

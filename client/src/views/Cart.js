@@ -77,7 +77,7 @@ export default function Cart() {
         </Row>
         <ButtonContainer>
         {(!cart?.items?.length) ?
-          <Button light disabled>CHECKOUT</Button>
+          <Message as='p' disabled>NO ITEMS</Message>
           :
           <Button light onClick={() => navigate('/checkout')}>CHECKOUT</Button>
          }
@@ -138,5 +138,8 @@ color: rgba(235, 198, 36, 0.945);
 font-weight: bold;
 font-size: 1.2rem;
 `
-
+const Message = styled(Button)`
+background-color: transparent;
+box-shadow: none;
+`
 

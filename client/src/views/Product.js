@@ -17,7 +17,9 @@ import {
   Row,
   RowText,
   Button,
-  Absolute
+  Absolute,
+  Error,
+  LoadingSpinner
 } from '../components/MyLibrary'
 import { Form, TextArea } from '../components/Form'
 import productImg from '../assets/fade_item_background.jpg'
@@ -35,12 +37,12 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews)
 export default function Product() {
   const { productId } = useParams()
   const dispatch = useDispatch()
-  const { reviewSuccess } = useSelector((state) => state.createProductReview)
-  const { reviews } = useSelector((state) => state.fetchProductReviews)
-  const { foundProductInformation } = useSelector(
+  const { reviewSuccess, createProductReviewError } = useSelector((state) => state.createProductReview)
+  const { reviews, fetchProductReviewsError } = useSelector((state) => state.fetchProductReviews)
+  const { foundProductInformation, fetchProductInformationError, fetchProductInformationLoading } = useSelector(
     (state) => state.fetchProductInformation
   )
-  const { similarProducts } = useSelector(
+  const { similarProducts, fetchSimilarProductsError } = useSelector(
     (state) => state.fetchSimilarProducts
   )
   const { userInfo } = useSelector((state) => state.authenticate)
@@ -96,8 +98,10 @@ export default function Product() {
 
   return (
     <View responsive>
+    {fetchProductInformationLoading && <LoadingSpinner />}
+    {fetchProductInformationError && <Error>{fetchProductInformationError}</Error>}
       <Section imageUrl={process.env.PUBLIC_URL + productImg}>
-          <Name top='2%' left='5%' width='100%' z='3'>
+          <Name top='2%' left='5%' width='90%' z='3'>
             {foundProductInformation && foundProductInformation.title}
           </Name>
           <Price as='p' bottom='15%' left='5%' width='3rem'>
@@ -120,7 +124,7 @@ export default function Product() {
             )}
           </ProductRating>
       </Section>
-      <Section>
+      <Section divider>
         <Information>
           <Row onClick={() => setOpenReviews(!openReviews)}>
             <RowText>Reviews {reviews && reviews.list?.length}</RowText>
@@ -132,6 +136,7 @@ export default function Product() {
           </Row>
           {openReviews && (
             <ReviewsContainer height='25rem'>
+            {fetchProductReviewsError && <Error>{fetchProductReviewsError}</Error>}
               <Reviews scroll gap='.5rem'>
                 {!reviews?.list?.length && <RowText>No Reviews</RowText>}
                 {reviews?.list &&
@@ -207,13 +212,14 @@ export default function Product() {
             </DescriptionContainer>
           )}
         </Information>
-        <Heading left='1.5rem' size='1.5rem'>
+        <Heading>
           Similar products
         </Heading>
         <SimilarProducts>
+        {fetchSimilarProductsError && <Error>{fetchSimilarProductsError}</Error>}
+        {similarProducts?.length &&
           <AutoPlaySwipeableViews slideClassName='item-suggestions-carousel'>
-            {similarProducts &&
-              similarProducts.map((product) => {
+              {similarProducts.map((product) => {
                 return (
                   <Link key={product._id} to={`/product/${product._id}`}>
                     <SimilarImage src={product.image} />
@@ -221,6 +227,7 @@ export default function Product() {
                 )
               })}
           </AutoPlaySwipeableViews>
+        }
         </SimilarProducts>
         <ButtonContainer>
           {foundProductInformation?.quantity > 0 ? (
@@ -228,7 +235,7 @@ export default function Product() {
               ADD TO CART
             </Button>
           ) : (
-            <Button disabled>OUT OF STOCK</Button>
+            <OutOfStock as='p' disabled>OUT OF STOCK</OutOfStock>
           )}
         </ButtonContainer>
       </Section>
@@ -333,5 +340,13 @@ const SimilarImage = styled.img`
     margin-left: -1rem;
   }
 `;
+
+const OutOfStock = styled(Button)`
+background-color: transparent;
+box-shadow: none;
+&:hover {
+  cursor: none;
+}
+`
 
 

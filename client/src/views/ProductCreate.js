@@ -3,11 +3,12 @@ import {useDispatch, useSelector} from 'react-redux'
 import { createProduct } from '../actions/productActions'
 import instance from '../service/api'
 import { Form, Input, Select, TextArea } from '../components/Form'
-import { Button, SubTitle, View } from '../components/MyLibrary'
+import { Button, View, Error, Heading, Message, LoadingSpinner } from '../components/MyLibrary'
 import editImg from '../assets/cloudy_mountain_DARK.jpg'
 
 export default function ProductCreate() {
   const dispatch = useDispatch()
+  const {createProductSuccess, createProductError, loadingCreateProduct} = useSelector((state) => state.createProduct)
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
@@ -47,7 +48,10 @@ export default function ProductCreate() {
 
   return (
     <View imageUrl={editImg}>
-    <SubTitle>Create Product</SubTitle>
+     <Heading>Create Product</Heading>
+     {loadingCreateProduct && <LoadingSpinner />}
+     {createProductSuccess && <Message>Product created!</Message>}
+    {createProductError && <Error>{createProductError}</Error>}
       <Form enctype='multipart/form-data' onSubmit={handleCreateProductSubmit}>
         <Input type='text' placeholder='Name' onChange={handleNameChange} />
         <Input type='number' placeholder='Price' onChange={handlePriceChange}/>

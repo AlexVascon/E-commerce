@@ -1,5 +1,5 @@
 import React, { useEffect} from 'react'
-import { View, Section, SubTitle, List, Row, RowText, Container, HoldImage, SubContainer } from '../components/MyLibrary'
+import { View, SubTitle, List, Row, RowText, Container, HoldImage, SubContainer, Error, LoadingSpinner, Heading } from '../components/MyLibrary'
 import { useDispatch, useSelector } from "react-redux"
 import { useParams} from 'react-router-dom'
 import { fetchOrder } from "../actions/orderActions"
@@ -8,7 +8,7 @@ import styled from 'styled-components'
 export default function OrderDetails() {
   const {orderId} = useParams()
   const dispatch = useDispatch()
-  const { foundOrder } = useSelector((state) => state.fetchOrder)
+  const { foundOrder, fetchOrderError, fetchOrderLoading } = useSelector((state) => state.fetchOrder)
 
   useEffect(() => {
     dispatch(fetchOrder(orderId))
@@ -16,6 +16,9 @@ export default function OrderDetails() {
 
   return (
     <View responsive>
+    <Heading>Order details</Heading>
+    {fetchOrderLoading && <LoadingSpinner />}
+    {fetchOrderError && <Error>{fetchOrderError}</Error>}
     {foundOrder && 
       <Information>
       <Summary >

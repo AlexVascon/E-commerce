@@ -38,7 +38,7 @@ export const register = (username, email, password, confirmPassword) => async (d
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -55,12 +55,13 @@ export const login = (usernameOrEmail, password) => async (dispatch) => {
     const validationToken = await instance.get('/user/verify')
     dispatch({ type: LOGIN_SUCCESS, payload: validationToken })
   } catch (error) {
+    console.log('error:', error.response)
     dispatch({
       type: LOGIN_FAIL,
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -81,7 +82,7 @@ export const authenticate = () => async (dispatch) => {
     const message =
      error.response && error.response.data.messages
       ? error.response.data.messages
-      : error.messages
+      : error.message
     if (message === 'Not authorized, token failed') {
       dispatch(logout())
     }
@@ -102,7 +103,7 @@ export const userEdit = (user) => async (dispatch) => {
       type: EDIT_USER_FAIL,
       payload: error.response && error.response.data.messages
       ? error.response.data.messages
-      : error.messages,
+      : error.message,
     })
   }
 }
@@ -128,7 +129,7 @@ export const saveShippingInformation = (shippingInformation) => async (dispatch)
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -144,7 +145,7 @@ export const fetchShippingInformation = () => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     });
   }
 }

@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMyOrders } from '../actions/orderActions'
 import { useNavigate } from 'react-router-dom'
-import { View, Heading } from '../components/MyLibrary'
+import { View, Heading, Error, LoadingSpinner } from '../components/MyLibrary'
 import styled from 'styled-components'
 
 export default function MyOrders() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { myOrders } = useSelector((state) => state.fetchMyOrders)
+  const { myOrders, fetchMyOrdersError, fetchMyOrdersLoading } = useSelector((state) => state.fetchMyOrders)
 
   useEffect(() => {
     dispatch(fetchMyOrders())
@@ -19,6 +19,7 @@ export default function MyOrders() {
       <Heading center size='1.5rem'>
         My Orders
       </Heading>
+      {fetchMyOrdersLoading && <LoadingSpinner />}
       <Table>
         <Row>
           <RowTitle>Items</RowTitle>
@@ -52,6 +53,7 @@ export default function MyOrders() {
             )
           })}
       </Table>
+      {fetchMyOrdersError && <Error>{fetchMyOrdersError}</Error>}
     </View>
   )
 }

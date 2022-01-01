@@ -76,7 +76,7 @@ export const editUserReducer = (state = {}, action) => {
     case EDIT_USER_REQUEST:
       return { loadingEditUser: true }
     case EDIT_USER_SUCCESS:
-      return { loadingEditUser: false, user: action.payload }
+      return { loadingEditUser: false, editUserSuccess: action.payload }
     case EDIT_USER_FAIL:
       return { loadingEditUser: false, editUserError: action.payload }
     default:
@@ -89,7 +89,7 @@ export const saveShippingInformationReducer = (state = {}, action) => {
     case SAVE_SHIPPING_REQUEST:
       return { loadingSaveShipping: true }
     case SAVE_SHIPPING_SUCCESS:
-      return { loadingSaveShipping: false, status: action.payload }
+      return { loadingSaveShipping: false, saveShippingInformationSuccess: action.payload }
     case SAVE_SHIPPING_FAIL:
       return { loadingSaveShipping: false, saveShippingInformationError: action.payload }
     default:

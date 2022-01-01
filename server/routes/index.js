@@ -6,7 +6,7 @@ import uploadRoutes from './uploadRoutes.js'
 
 export default (app) => {
   app.use('/user', userRoutes)
-  app.use('/products', productRoutes)
+  app.use('/product', productRoutes)
   app.use('/cart', cartRoutes)
   app.use('/order', orderRoutes)
   app.use('/upload', uploadRoutes)

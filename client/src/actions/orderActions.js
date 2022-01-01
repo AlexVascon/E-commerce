@@ -25,7 +25,7 @@ export const createOrder = () => async (dispatch) => {
       payload: error.response 
       && error.response.data.messages 
       ? error.response.data.messages 
-      : error.messages,
+      : error.message,
   })
   }
 }
@@ -41,7 +41,7 @@ export const fetchOrder = (orderId) => async (dispatch) => {
       payload: error.response 
       && error.response.data.messages 
       ? error.response.data.messages 
-      : error.messages,
+      : error.message,
   })
   }
 }
@@ -60,7 +60,7 @@ export const payOrder = (error,orderId, paymentMethod) => async (dispatch) => {
       payload: error.response 
       && error.response.data.messages 
       ? error.response.data.messages 
-      : error.messages,
+      : error.message,
   })
   }
 }
@@ -76,7 +76,7 @@ export const fetchMyOrders = () => async (dispatch) => {
       payload: error.response 
       && error.response.data.messages 
       ? error.response.data.messages 
-      : error.messages,
+      : error.message,
   })
   }
 }

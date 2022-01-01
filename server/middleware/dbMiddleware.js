@@ -25,7 +25,7 @@ const handleSchemaValidationError = (err, res, req) => {
   const code = 400
 
   if (errors.length > 1) {
-    const formattedErrors = errors.join("")
+    const formattedErrors = errors.join(' ')
     errorLogger(formattedErrors, fields, req.path)
     return res.status(code).send({ messages: formattedErrors, fields: fields })
   }
@@ -40,9 +40,10 @@ const modelOfDocumentNotFoundError = (err) => {
 
 export default (err, req, res, next) => {
   try {
+    console.log('name:', err.name)
     if (err.name === "DocumentNotFoundError") {
       const model = modelOfDocumentNotFoundError(err)
-      return res.status(404).send({ message:  `${model} not found` })
+      return res.status(404).send({ messages:`${model} not found`})
     }
     if (err.name === "ValidationError")
       return (err = handleSchemaValidationError(err, res, req))

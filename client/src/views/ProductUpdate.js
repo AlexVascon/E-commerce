@@ -4,24 +4,25 @@ import {useDispatch, useSelector} from 'react-redux'
 import { useParams} from 'react-router-dom'
 import { updateProduct, fetchProductInformation } from '../actions/productActions'
 import { Form, Input, Select, TextArea } from '../components/Form'
-import { Button, Heading, SubTitle, View } from '../components/MyLibrary'
+import { Button, Heading, View, Error, LoadingSpinner, Message } from '../components/MyLibrary'
 import createImg from '../assets/cloudy_mountain_DARK.jpg'
 
 export default function ProductUpdate() {
   const {productId} = useParams()
   const dispatch = useDispatch()
   const {foundProductInformation} = useSelector((state) => state.fetchProductInformation)
+  const {updateProductSuccess, updateProductError, loadingUpdateProduct} = useSelector((state) => state.updateProduct)
   useEffect(() => {
     dispatch(fetchProductInformation(productId))
   }, [dispatch, productId])
 
-  const [name, setName] = useState(foundProductInformation?.title)
-  const [price, setPrice] = useState(foundProductInformation?.price)
-  const [quantity, setQuantity] = useState(foundProductInformation?.quantity)
-  const [selection, setSelection] = useState(foundProductInformation?.selection)
-  const [category, setCategory] = useState(foundProductInformation?.category)
-  const [description, setDescription] = useState(foundProductInformation?.description)
-  const [imageURL, setImageURL] = useState(foundProductInformation?.image)
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState('')
+  const [quantity, setQuantity] = useState('')
+  const [selection, setSelection] = useState('')
+  const [category, setCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [imageURL, setImageURL] = useState('')
   const [isUploading, setIsUploading] = useState(false)
 
   const handleNameChange = (e) => setName(e.target.value)
@@ -60,13 +61,16 @@ export default function ProductUpdate() {
 
   const handleCreateProductSubmit = async (e) => {
     e.preventDefault()
-    const product = {name, price, quantity, selection, category, description, imageURL}
+    const product = {productId, name, price, quantity, selection, category, description, imageURL}
     dispatch(updateProduct(product))
   }
 
   return (
     <View imageUrl={createImg}>
        <Heading>Update Product</Heading>
+       {loadingUpdateProduct && <LoadingSpinner />}
+       {updateProductSuccess && <Message>Product updated!</Message>}
+      {updateProductError && <Error>{updateProductError}</Error>}
      {foundProductInformation && <Form enctype='multipart/form-data' onSubmit={handleCreateProductSubmit}>
         <Input type='text' value={name} onChange={handleNameChange} />
         <Input type='number' value={price} onChange={handlePriceChange}/>
@@ -91,3 +95,4 @@ export default function ProductUpdate() {
     </View>
   )
 }
+

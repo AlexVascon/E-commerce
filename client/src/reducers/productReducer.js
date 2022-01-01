@@ -128,7 +128,7 @@ export const createProductReducer = (state = {}, action) => {
     case CREATE_PRODUCT_REQUEST:
       return { loadingCreateProduct: true }
     case CREATE_PRODUCT_SUCCESS:
-      return { loadingCreateProduct: false, product: action.payload }
+      return { loadingCreateProduct: false, createProductSuccess: action.payload }
     case CREATE_PRODUCT_FAIL:
       return { loadingCreateProduct: false, createProductError: action.payload }
     default:
@@ -154,7 +154,7 @@ export const updateProductReducer = (state = {}, action) => {
     case UPDATE_PRODUCT_REQUEST:
       return { loadingUpdateProduct: true }
     case UPDATE_PRODUCT_SUCCESS:
-      return { loadingUpdateProduct: false, product: action.payload }
+      return { loadingUpdateProduct: false, updateProductSuccess: action.payload }
     case UPDATE_PRODUCT_FAIL:
       return { loadingUpdateProduct: false, updateProductError: action.payload }
     default:

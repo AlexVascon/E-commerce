@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { saveShippingInformation, fetchShippingInformation } from '../actions/userActions'
-import { View, Button, Error, SubTitle } from '../components/MyLibrary'
+import { View, Button, Error, LoadingSpinner, Heading, Message } from '../components/MyLibrary'
 import shippingImg from '../assets/cloudy_mountain_DARK.jpg'
 import { Form, FormGroup, Input } from '../components/Form'
 
 export default function Shipping() {
   const dispatch = useDispatch()
-  const {saveShippingInformationError} = useSelector((state) => state.saveShippingInformation)
-  const {shippingInformation} = useSelector((state) => state.fetchShippingInformation)
+  const {saveShippingInformationError, loadingSaveShipping, saveShippingInformationSuccess} = useSelector((state) => state.saveShippingInformation)
+  const {shippingInformation, fetchShippingInformationError} = useSelector((state) => state.fetchShippingInformation)
   const [fullName, setFullName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [email, setEmail] = useState('')
@@ -37,23 +37,39 @@ export default function Shipping() {
     dispatch(fetchShippingInformation())
   }, [dispatch])
 
+  useEffect(() => {
+    if(shippingInformation) {
+      setFullName(shippingInformation.fullName)
+      setPhoneNumber(shippingInformation.phoneNumber)
+      setEmail(shippingInformation.email)
+      setCountry(shippingInformation.country)
+      setCity(shippingInformation.city)
+      setProvince(shippingInformation.province)
+      setPostCode(shippingInformation.postCode)
+      setStreetAddress(shippingInformation.streetAddress)
+    }
+  }, [shippingInformation])
+
   return (
     <View imageUrl={process.env.PUBLIC_URL + shippingImg}>
-    {saveShippingInformationError && <Error>{saveShippingInformationError}</Error>}
+    <Heading>Shipping Information</Heading>
+    {loadingSaveShipping && <LoadingSpinner/>}
+    {saveShippingInformationSuccess && <Message top='0%' bottom='0%'>Shipping information saved!</Message>}
+    {fetchShippingInformationError && <Error top='0%' bottom='0%'>{fetchShippingInformationError}</Error>}
+    {saveShippingInformationError && <Error top='0%' bottom='0%'>{saveShippingInformationError}</Error>}
       <Form onSubmit={onShippingAddressSubmit}>
-      <SubTitle>Shipping Information</SubTitle>
-        <Input type='text' placeholder={shippingInformation?.fullName || 'Full name'} onChange={handleFullNameChange} />
-        <Input type='text' placeholder={shippingInformation?.phoneNumber || 'Phone number'} onChange={handlePhoneNumberChange} />
-        <Input type='email' placeholder={shippingInformation?.email || 'email'} onChange={handleEmailChange} />
+        <Input type='text' value={fullName} onChange={handleFullNameChange} />
+        <Input type='text' value={phoneNumber} onChange={handlePhoneNumberChange} />
+        <Input type='email' value={email} onChange={handleEmailChange} />
         <FormGroup>
-          <Input type='text' placeholder={shippingInformation?.country || 'country'} onChange={handleCountryChange} />
-          <Input type='text' placeholder={shippingInformation?.city || 'city'} onChange={handleCityChange} />
+          <Input type='text' value={country} onChange={handleCountryChange} />
+          <Input type='text' value={city} onChange={handleCityChange} />
         </FormGroup>
         <FormGroup>
-          <Input type='text' placeholder={shippingInformation?.province || 'province'} onChange={handleProvinceChange} />
-          <Input type='text' placeholder={shippingInformation?.postCode || 'post code'} onChange={handlePostCodeChange} />
+          <Input type='text' value={province} onChange={handleProvinceChange} />
+          <Input type='text' value={postCode} onChange={handlePostCodeChange} />
         </FormGroup>
-        <Input type='text' placeholder={shippingInformation?.streetAddress || 'streetAddress'} onChange={handleStreetAddressChange} />
+        <Input type='text' value={streetAddress} onChange={handleStreetAddressChange} />
         <Button light type='submit'>
           SAVE
         </Button>
@@ -61,3 +77,4 @@ export default function Shipping() {
     </View>
   )
 }
+

@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllProducts, deleteProduct } from '../actions/productActions'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { View, Heading } from '../components/MyLibrary'
+import { View, Heading, Error } from '../components/MyLibrary'
 import ReactPaginate from 'react-paginate'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 export default function ProductList() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { foundProducts } = useSelector((state) => state.fetchAllProducts)
+  const { foundProducts, fetchAllProductsError } = useSelector((state) => state.fetchAllProducts)
   const [pageNumber, setPageNumber] = useState(0)
 
   useEffect(() => {
@@ -40,15 +40,16 @@ export default function ProductList() {
           <Heading center size='1.5rem'>
         Products
       </Heading>
+      <Create onClick={() => navigate('/product/create')}>Create +</Create>
       <Table>
         <Row>
-          <RowTitle width='9%'>ID</RowTitle>
-          <RowTitle width='11%'>NAME</RowTitle>
-          <RowTitle width='7%'>PRICE</RowTitle>
-          <RowTitle width='11%'>SELECTION</RowTitle>
-          <RowTitle width='8%'>CATEGORY</RowTitle>
+          <RowTitle width='7%'>ID</RowTitle>
+          <RowTitle width='10%'>NAME</RowTitle>
+          <RowTitle width='6%'>PRICE</RowTitle>
+          <RowTitle width='8%'>SELECTION</RowTitle>
+          <RowTitle width='6%'>CATEGORY</RowTitle>
           <RowTitle width='6%'>EDIT</RowTitle>
-          <RowTitle width='6%'>Delete</RowTitle>
+          <RowTitle width='6%'>DELETE</RowTitle>
         </Row>
         <tbody>
         {foundProducts &&
@@ -75,6 +76,7 @@ export default function ProductList() {
           })}
           </tbody>
       </Table>
+      {fetchAllProductsError && <Error>{fetchAllProductsError}</Error>}
       {pagnation()}
     </View>
   )
@@ -124,5 +126,11 @@ const Button = styled.button`
   &:hover {
     cursor: pointer;
   }
+`
+const Create = styled(Button)`
+position: absolute;
+margin: auto;
+right: 5%;
+top: 1%;
 `
 const Bin = styled(DeleteIcon)``

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../actions/productActions'
-import { View, Section, Absolute } from '../components/MyLibrary'
+import { View, Section, Absolute, Error } from '../components/MyLibrary'
 import MenImg from '../assets/men.jpg'
 import WomenImg from '../assets/women.jpg'
 import cardBackgroundImg from '../assets/donught_corner_img.jpg'
@@ -13,7 +13,7 @@ import ReactStars from 'react-rating-stars-component'
 export default function Selection() {
   const { gender } = useParams()
   const dispatch = useDispatch()
-  const { foundProducts } = useSelector((state) => state.fetchProducts)
+  const { foundProducts, fetchProductsError, fetchProductsLoading } = useSelector((state) => state.fetchProducts)
   const [category, setCategory] = useState('shirt') // default
   const [pageNumber, setPageNumber] = useState(0)
 
@@ -84,6 +84,7 @@ export default function Selection() {
       </Section>
       <Section>
         <SelectionItems>
+        {fetchProductsError && <Error>{fetchProductsError}</Error>}
           {foundProducts &&
             foundProducts.products.map((item) => {
               return (

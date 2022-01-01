@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import ringImage from '../assets/donught_corner_img.jpg'
+import CircularProgress from '@mui/material/CircularProgress'
 
 export const Container = styled.div`
 height: ${props => props.height};
@@ -55,7 +56,6 @@ background-position-y: center;
 background-position-x: center;
 background-repeat: no-repeat;
 background-size: cover;
-padding-top: 1rem;
 @media (min-width: 700px) {
   ${props => props.responsive && "flex-direction: row;"}
   gap: ${props => props.gap};
@@ -75,14 +75,16 @@ background-repeat: no-repeat;
 background-size: cover;
 @media (min-width: 550px) {
   ${props => props.responsive && "flex-direction: row;"}
+  ${props => props.divider && "border-left: 1px solid #CCC"}
 }
 `
 export const Heading = styled.h2`
-width: 100%;
-${props => props.left && "text-align: left;"}
+margin: auto;
+margin-bottom: ${props => props.bottom ? props.bottom : '2%'};
+margin-top: ${props => props.top ? props.top : '2%'};
+margin-left: ${props => props.left ? props.left : '5%'};
 ${props => props.center && "text-align: center;"}
 font-size: ${props => props.size};
-padding-left: ${props => props.left};
 color: rgba(235, 198, 36, 0.945);
 @media(min-width: 550px) {
   ${props => props.static && 
@@ -142,13 +144,28 @@ color: black;
   }
 `
 export const Error = styled.p`
- color: white;
-  border: none;
+ color: RGB(138, 40, 29);
+ font-weight: bold;
+ border: none;
   outline: none;
   padding: 1rem;
   background-color: rgba(253, 163, 249, 0.582);
   width: 80%;
   align-self: center;
+  justify-self: center;
   margin: auto;
-  margin-bottom: 0;
+  margin-top: ${props => props.top};
+  margin-bottom: ${props => props.bottom};
+`
+export const Message = styled(Error)`
+background-color: RGB(65, 134, 217);
+color: RGB(20, 47, 102);
+`
+export const LoadingSpinner = styled(CircularProgress)`
+width: 6rem;
+height: auto;
+margin: auto;
+align-self: center;
+justify-self: center;
+${props => props.big && "width: 12rem;"}
 `

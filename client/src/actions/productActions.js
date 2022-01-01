@@ -37,7 +37,7 @@ export const fetchProducts = (selection, category, page) => async (dispatch) => 
   try {
     dispatch({type: PRODUCTS_REQUEST})
     const { data } = await instance.get(
-      `/products/category?selection=${selection}&category=${category}&page=${page + 1}&limit=5`
+      `/product/category?selection=${selection}&category=${category}&page=${page + 1}&limit=5`
     )
     localStorage.setItem('currentPage', JSON.stringify({category: category, page: page}) )
     dispatch({ type: PRODUCTS_SUCCESS, payload: data })
@@ -47,7 +47,7 @@ export const fetchProducts = (selection, category, page) => async (dispatch) => 
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -55,7 +55,7 @@ export const fetchProducts = (selection, category, page) => async (dispatch) => 
 export const fetchAllProducts = (page) => async (dispatch) => {
   try {
     dispatch({type: ALL_PRODUCTS_REQUEST})
-    const {data} = await instance.get(`/products/all?page=${page + 1}&limit=10`)
+    const {data} = await instance.get(`/product/all?page=${page + 1}&limit=10`)
     dispatch({type: ALL_PRODUCTS_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -63,7 +63,7 @@ export const fetchAllProducts = (page) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -72,7 +72,7 @@ export const fetchProductInformation = (productId) => async (dispatch) => {
   try {
     dispatch({type: PRODUCT_INFORMATION_REQUEST})
     const { data } = await instance.get(
-      `/products/information/${productId}`
+      `/product/information/${productId}`
     );
     dispatch({ type: PRODUCT_INFORMATION_SUCCESS, payload: data });
   } catch (error) {
@@ -81,7 +81,7 @@ export const fetchProductInformation = (productId) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -89,7 +89,7 @@ export const fetchProductInformation = (productId) => async (dispatch) => {
 export const fetchProductReviews = (productId) => async (dispatch) => {
   try {
     dispatch({type: PRODUCT_REVIEWS_REQUEST})
-    const { data } = await instance.get(`/products/reviews?productId=${productId}&page=1&limit=5`)
+    const { data } = await instance.get(`/product/reviews?productId=${productId}&page=1&limit=5`)
     dispatch({type: PRODUCT_REVIEWS_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -97,7 +97,7 @@ export const fetchProductReviews = (productId) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -110,7 +110,7 @@ export const createProductReview = (review) => async (dispatch) => {
     rating: review.rating,
     description: review?.description || ''
   }
-  const { data } = await instance.post('/products/create/review', body)
+  const { data } = await instance.post('/product/create/review', body)
   dispatch({type: CREATE_PRODUCT_REVIEW_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -118,7 +118,7 @@ export const createProductReview = (review) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -126,7 +126,7 @@ export const createProductReview = (review) => async (dispatch) => {
 export const fetchSimilarProducts = (productId) => async (dispatch) => {
   try {
     dispatch({type: SIMILAR_PRODUCT_REQUEST})
-    const {data} = await instance.get(`/products/suggestions/${productId}`)
+    const {data} = await instance.get(`/product/suggestions/${productId}`)
     dispatch({type: SIMILAR_PRODUCT_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -134,7 +134,7 @@ export const fetchSimilarProducts = (productId) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -142,7 +142,7 @@ export const fetchSimilarProducts = (productId) => async (dispatch) => {
 export const fetchTopProducts = () => async (dispatch) => {
   try {
     dispatch({type: TOP_PRODUCTS_REQUEST})
-    const {data} = await instance.get('/products/top')
+    const {data} = await instance.get('/product/top')
     dispatch({type: TOP_PRODUCTS_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -150,7 +150,7 @@ export const fetchTopProducts = () => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -158,7 +158,7 @@ export const fetchTopProducts = () => async (dispatch) => {
 export const createProduct = (product) => async (dispatch) => {
   try {
     dispatch({type: CREATE_PRODUCT_REQUEST})
-    const {data} = await instance.post('/products/create', product)
+    const {data} = await instance.post('/product/create', product)
     dispatch({type: CREATE_PRODUCT_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -166,7 +166,7 @@ export const createProduct = (product) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -174,7 +174,7 @@ export const createProduct = (product) => async (dispatch) => {
 export const updateProduct = (product) => async (dispatch) => {
   try {
     dispatch({type: UPDATE_PRODUCT_REQUEST})
-    const {data} = await instance.post('/product/update', product)
+    const {data} = await instance.put('/product/edit', product)
     dispatch({type: UPDATE_PRODUCT_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -182,7 +182,7 @@ export const updateProduct = (product) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }
@@ -190,7 +190,7 @@ export const updateProduct = (product) => async (dispatch) => {
 export const deleteProduct = (productId) => async (dispatch) => {
   try {
     dispatch({type: DELETE_PRODUCT_REQUEST})
-    const {data} = await instance.delete(`/products/${productId}`)
+    const {data} = await instance.delete(`/product/${productId}`)
     dispatch({type: DELETE_PRODUCT_SUCCESS, payload: data})
   } catch (error) {
     dispatch({
@@ -198,7 +198,7 @@ export const deleteProduct = (productId) => async (dispatch) => {
       payload:
         error.response && error.response.data.messages
           ? error.response.data.messages
-          : error.messages,
+          : error.message,
     })
   }
 }

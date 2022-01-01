@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      required: [true, 'username cant be empty.']
+      required: [true, 'username cant be empty.'],
+      unique: [true, 'That email address is taken.']
     },
     isAdmin: {
       type: Boolean,

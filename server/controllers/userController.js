@@ -49,6 +49,7 @@ export const createUser = async (req,res,next) => {
 export const fetchUser = async (req,res,next) => {
   try {
     const {usernameOrEmail, password} = req.body
+    if(!usernameOrEmail || !password) return res.status(404).send({messages: 'username or password invalid'})
     const searchCriteria = await usernameOrEmail.includes('@') ? 'email' : 'username'
     const user = await User.findOne( { [searchCriteria]: usernameOrEmail} ).lean().orFail()
     if(!bcrypt.compareSync(password, user.password)) return res.status(400).send({messages: 'Invalid username or password'})
@@ -68,7 +69,9 @@ export const editUser = async (req, res, next) => {
     const user = await User.findById(req.user._id)
     user.username = req.body.username || user.username
     user.email = req.body.email || user.email
-    if(req.body.password === req.body.confirmPassword) {
+    if(req.body.password &&  (req.body.password !== req.body.confirmPassword)) {
+      return res.status(404).send({messages: 'passwords dont match'})
+    } else {
       user.password = req.body.password || user.password
     }
     await user.save()

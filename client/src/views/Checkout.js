@@ -1,10 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchCartItems } from '../actions/cartActions'
 import { fetchShippingInformation } from '../actions/userActions'
 import { createOrder } from '../actions/orderActions'
-import { View, Row, RowText, Button, Error } from '../components/MyLibrary'
+import {
+  View,
+  Row,
+  RowText,
+  Button,
+  Error,
+  Heading,
+  Container,
+  List,
+  LoadingSpinner,
+} from '../components/MyLibrary'
 import styled from 'styled-components'
+import successImg from '../assets/success.png'
+import Dialog from '@mui/material/Dialog'
 import { useNavigate } from 'react-router-dom'
 
 export default function Checkout() {
@@ -14,7 +26,16 @@ export default function Checkout() {
   const { shippingInformation } = useSelector(
     (state) => state.fetchShippingInformation
   )
-  const { order } = useSelector((state) => state.createOrder)
+  const { order, createOrderLoading } = useSelector(
+    (state) => state.createOrder
+  )
+  const [open, setOpen] = useState(false)
+
+  const handleOpenSuccess = () => setOpen(true)
+  const handleCloseSuccess = () => {
+    setOpen(false)
+    navigate(`/order/pay/${order._id}`)
+  }
 
   useEffect(() => {
     dispatch(fetchCartItems())
@@ -22,17 +43,21 @@ export default function Checkout() {
   }, [dispatch])
 
   useEffect(() => {
-    if (order) navigate(`/order/pay/${order._id}`)
+    if (order) handleOpenSuccess()
   }, [order, navigate])
 
   return (
     <View responsive>
-    {fetchCartError && <Error>{fetchCartError}</Error>}
-      <OrderItems>
+      <Heading static top='1%' bottom='0%' left='5%'>
+        Chekout
+      </Heading>
+      {createOrderLoading && <LoadingSpinner />}
+      {fetchCartError && <Error>{fetchCartError}</Error>}
+      <Order scroll>
         {cart &&
           cart.items.map((item) => {
             return (
-              <Item key={item.itemId}>
+              <Item width='90%' border key={item.itemId}>
                 <ImageContainer>
                   <Image src={item.image} />
                 </ImageContainer>
@@ -41,8 +66,8 @@ export default function Checkout() {
               </Item>
             )
           })}
-      </OrderItems>
-      <CostList>
+      </Order>
+      <CostInformation>
         <Row>
           <RowText>Total</RowText>
           <RowText>${cart && cart.totalCost}</RowText>
@@ -70,51 +95,28 @@ export default function Checkout() {
             CONFIRM ORDER
           </OrderButton>
         )}
-      </CostList>
+      </CostInformation>
+      <Dialog open={open} onClose={handleCloseSuccess}>
+        <SuccessMessage>
+          <SuccessImage src={successImg} alt='' />
+          <b>Order placed</b>
+          <p>Awaiting transaction</p>
+          <Button onClick={handleCloseSuccess}>Continue</Button>
+        </SuccessMessage>
+      </Dialog>
     </View>
-  );
+  )
 }
 
-const OrderItems = styled.ul`
-  padding: 0 1rem;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.7rem;
-  flex: 2;
-  @media (min-width: 750px) {
-    position: absolute;
-    left: 0%;
-    width: 25rem;
-    top: 8%;
-    bottom: 5%;
-  }
-  @media (min-width: 850px) {
-    left: 0%;
-    width: 30rem;
-  }
-  @media (min-width: 950px) {
-    left: 5%;
-    width: 30rem;
-  }
-
-  @media (min-width: 1350px) {
-    left: 20%;
-    width: 30rem;
+const Order = styled(List)`
+  flex: 1.5;
+  @media (min-width: 600px) {
+    margin-top: 3rem;
   }
 `
-const Item = styled.div`
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-self: center;
-  justify-self: center;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-  width: 100%;
-  border-bottom: 2px solid rgba(235, 198, 36, 0.945);
+const Item = styled(Container)`
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 `
 const Image = styled.img`
   width: 50%;
@@ -150,42 +152,45 @@ const OrderButton = styled(Button)`
   margin-bottom: 2rem;
 `
 const Message = styled(Button)`
-background-color: transparent;
-box-shadow: none;
+  background-color: transparent;
+  box-shadow: none;
+  &:hover {
+    cursor: none;
+  }
 `
 const AddShipping = styled(RowText)`
   color: red;
+  &:hover {
+    cursor: pointer;
+  }
 `
 const EditShipping = styled(RowText)`
   color: blue;
+  &:hover {
+    cursor: pointer;
+  }
 `
-const CostList = styled.ul`
-  flex: 1;
-  margin: auto;
-  margin-top: 1rem;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0;
-  width: 100%;
-  @media (min-width: 750px) {
-    position: absolute;
-    right: 2%;
-    width: 22rem;
-    top: 8%;
-    bottom: 5%;
-  }
-  @media (min-width: 850px) {
-    right: 0%;
-    width: 25rem;
-  }
-  @media (min-width: 950px) {
-    right: 4%;
-    width: 27rem;
-  }
+const CostInformation = styled(List)``
 
-  @media (min-width: 1250px) {
-    right: 15%;
-    width: 27rem;
+const SuccessImage = styled.img`
+  width: 5rem;
+  height: 5rem;
+  background-color: transparent;
+`
+const SuccessMessage = styled.div`
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  padding: 1.5rem;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  border: none;
+  margin: auto;
+  margin-bottom: 0;
+  @media (min-width: 550px) {
+    max-width: 30rem;
   }
 `

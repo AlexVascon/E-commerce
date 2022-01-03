@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { register, login } from '../actions/userActions'
-import { View, Button, Error, LoadingSpinner, Heading } from '../components/MyLibrary'
+import {
+  View,
+  Button,
+  Error,
+  LoadingSpinner,
+  Heading,
+} from '../components/MyLibrary'
 import portalImg from '../assets/greyscale_mountains_DARK.jpg'
 import { Form, Input } from '../components/Form'
 import styled from 'styled-components'
@@ -10,15 +16,18 @@ import { useNavigate } from 'react-router-dom'
 export default function Portal() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { registerError, registeredUser, registerLoading } = useSelector((state) => state.register)
-  const { loggedUser, loginError, loadingLogin } = useSelector((state) => state.login)
+  const { registerError, registeredUser, registerLoading } = useSelector(
+    (state) => state.register
+  )
+  const { loggedUser, loginError, loadingLogin } = useSelector(
+    (state) => state.login
+  )
   const [isLogin, setIsLogin] = useState(true)
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [usernameOrEmail, setUsernameOrEmail] = useState('')
-
 
   const handleUsernameChange = (e) => setUsername(e.target.value)
   const handleEmailChange = (e) => setEmail(e.target.value)
@@ -42,11 +51,21 @@ export default function Portal() {
 
   return (
     <View imageUrl={process.env.PUBLIC_URL + portalImg}>
-    <Heading>Portal</Heading>
-    {registerLoading && <LoadingSpinner />}
-    {loadingLogin && <LoadingSpinner />}
-    {loginError && isLogin && <Error bottom='5%' top='0%'>{loginError}</Error>}
-    {registerError && !isLogin && <Error bottom='0%' top='0%'>{registerError}</Error>}
+      <Heading top='1%' left='5%' bottom='0'>
+        Portal
+      </Heading>
+      {registerLoading && <LoadingSpinner />}
+      {loadingLogin && <LoadingSpinner />}
+      {loginError && isLogin && (
+        <Error bottom='5%' top='0%'>
+          {loginError}
+        </Error>
+      )}
+      {registerError && !isLogin && (
+        <Error bottom='0%' top='0%'>
+          {registerError}
+        </Error>
+      )}
       <Options>
         <Btn onClick={() => setIsLogin(true)}>Login</Btn>/
         <Btn onClick={() => setIsLogin(false)}>Register</Btn>

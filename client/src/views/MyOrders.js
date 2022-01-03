@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchMyOrders } from '../actions/orderActions'
 import { useNavigate } from 'react-router-dom'
 import { View, Heading, Error, LoadingSpinner } from '../components/MyLibrary'
-import styled from 'styled-components'
+import { Table, TR, TH, TD, Button } from '../components/Table'
 
 export default function MyOrders() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { myOrders, fetchMyOrdersError, fetchMyOrdersLoading } = useSelector((state) => state.fetchMyOrders)
+  const { myOrders, fetchMyOrdersError, fetchMyOrdersLoading } = useSelector(
+    (state) => state.fetchMyOrders
+  )
 
   useEffect(() => {
     dispatch(fetchMyOrders())
@@ -16,74 +18,50 @@ export default function MyOrders() {
 
   return (
     <View>
-      <Heading center size='1.5rem'>
+      <Heading center size='1.5rem' bottom='1%' top='1%'>
         My Orders
       </Heading>
       {fetchMyOrdersLoading && <LoadingSpinner />}
       <Table>
-        <Row>
-          <RowTitle>Items</RowTitle>
-          <RowTitle>Date</RowTitle>
-          <RowTitle>Total</RowTitle>
-          <RowTitle>Paid</RowTitle>
-          <RowTitle>View</RowTitle>
-        </Row>
-        {myOrders &&
-          myOrders.map((order) => {
-            return (
-              <Row key={order._id}>
-                <Data>{order.items.length}</Data>
-                <Data>{order.createdAt.substring(0, 10)}</Data>
-                <Data>${order.totalPrice}</Data>
-                <Data>
-                  {order.isPaid ? (
-                    order.paidAt.substring(0, 10)
-                  ) : (
-                    <Button onClick={() => navigate(`/order/pay/${order._id}`)}>
-                      Pay
-                    </Button>
-                  )}
-                </Data>
-                <Data>
+        <thead>
+          <TR>
+            <TH>Items</TH>
+            <TH>Date</TH>
+            <TH>Total</TH>
+            <TH>Paid</TH>
+            <TH>View</TH>
+          </TR>
+        </thead>
+        <tbody>
+          {myOrders &&
+            myOrders.map((order) => {
+              return (
+                <TR key={order._id}>
+                  <TD>{order.items.length}</TD>
+                  <TD>{order.createdAt.substring(0, 10)}</TD>
+                  <TD>${order.totalPrice}</TD>
+                  <TD>
+                    {order.isPaid ? (
+                      order.paidAt.substring(0, 10)
+                    ) : (
+                      <Button
+                        onClick={() => navigate(`/order/pay/${order._id}`)}
+                      >
+                        Pay
+                      </Button>
+                    )}
+                  </TD>
+                  <TD>
                     <Button onClick={() => navigate(`/order/${order._id}`)}>
                       Details
                     </Button>
-                </Data>
-              </Row>
-            )
-          })}
+                  </TD>
+                </TR>
+              )
+            })}
+        </tbody>
       </Table>
       {fetchMyOrdersError && <Error>{fetchMyOrdersError}</Error>}
     </View>
   )
 }
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`
-const Row = styled.tr`
-  &:nth-child(even) {
-    background-color: #dddddd;
-  }
-`
-const RowTitle = styled.th`
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-`
-const Data = styled.td`
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-`
-const Button = styled.button`
-  border: none;
-  background-color: rgba(235, 198, 36, 0.945);
-  color: black;
-  font-weight: 900;
-  padding: 0.5rem;
-  border-radius: 0.3rem;
-  &:hover {
-    cursor: pointer;
-  }
-`

@@ -4,8 +4,6 @@ import cors from 'cors'
 import morgan from 'morgan'
 
 export default (app) => {
-  app.use(cors())
-
   if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'))
   }

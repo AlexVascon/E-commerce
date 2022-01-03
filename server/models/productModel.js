@@ -1,34 +1,34 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const productSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, 'title cant be empty.']
+      required: [true, 'title cant be empty.'],
     },
     price: {
       type: Number,
-      required: [true, 'price cant be empty.']
+      required: [true, 'price cant be empty.'],
     },
     category: {
       type: String,
-      required: [true, 'category cant be empty.']
+      required: [true, 'category cant be empty.'],
     },
     description: {
       type: String,
-      required: [true, 'description cant be empty.']
+      required: [true, 'description cant be empty.'],
     },
     image: {
       type: String,
-      required: [true, 'image cant be empty.'] 
+      required: [true, 'image cant be empty.'],
     },
     selection: {
       type: String,
-      required: [true, 'selection cant be empty.']
+      required: [true, 'selection cant be empty.'],
     },
     quantity: {
       type: Number,
-      default: 0
+      default: 0,
     },
     reviews: [String],
     rating: {
@@ -41,10 +41,11 @@ const productSchema = new mongoose.Schema(
   }
 )
 
-productSchema.methods.calculateNewRatingAverage = async function(newRating) {
-  if(this.rating === 0 && this.reviews.length === 0) return this.rating * this.reviews.length
-  const oldAverage = this.rating 
-  const newAverage = oldAverage + ((newRating - oldAverage) / this.reviews.length )
+productSchema.methods.calculateNewRatingAverage = async function (newRating) {
+  if (this.rating === 0 && this.reviews.length === 0)
+    return this.rating * this.reviews.length
+  const oldAverage = this.rating
+  const newAverage = oldAverage + (newRating - oldAverage) / this.reviews.length
   this.rating = newAverage
 }
 

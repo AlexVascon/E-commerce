@@ -1,17 +1,30 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import instance from '../service/api'
-import {useDispatch, useSelector} from 'react-redux'
-import { useParams} from 'react-router-dom'
-import { updateProduct, fetchProductInformation } from '../actions/productActions'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import {
+  updateProduct,
+  fetchProductInformation,
+} from '../actions/productActions'
 import { Form, Input, Select, TextArea } from '../components/Form'
-import { Button, Heading, View, Error, LoadingSpinner, Message } from '../components/MyLibrary'
+import {
+  Button,
+  Heading,
+  View,
+  Error,
+  LoadingSpinner,
+  Message,
+} from '../components/MyLibrary'
 import createImg from '../assets/cloudy_mountain_DARK.jpg'
 
 export default function ProductUpdate() {
-  const {productId} = useParams()
+  const { productId } = useParams()
   const dispatch = useDispatch()
-  const {foundProductInformation} = useSelector((state) => state.fetchProductInformation)
-  const {updateProductSuccess, updateProductError, loadingUpdateProduct} = useSelector((state) => state.updateProduct)
+  const { foundProductInformation } = useSelector(
+    (state) => state.fetchProductInformation
+  )
+  const { updateProductSuccess, updateProductError, loadingUpdateProduct } =
+    useSelector((state) => state.updateProduct)
   useEffect(() => {
     dispatch(fetchProductInformation(productId))
   }, [dispatch, productId])
@@ -33,7 +46,7 @@ export default function ProductUpdate() {
   const handleDescriptionChange = (e) => setDescription(e.target.value)
 
   useEffect(() => {
-    if(foundProductInformation) {
+    if (foundProductInformation) {
       setName(foundProductInformation.title)
       setPrice(foundProductInformation.price)
       setQuantity(foundProductInformation.quantity)
@@ -50,9 +63,9 @@ export default function ProductUpdate() {
       const uploadData = new FormData()
       uploadData.append('image', e.target.files[0])
       setIsUploading(true)
-      const {data} = await instance.post('/upload/product', uploadData)
+      const { data } = await instance.post('/upload/product', uploadData)
       setImageURL(data?.cloud_url)
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     } finally {
       setIsUploading(false)
@@ -61,38 +74,68 @@ export default function ProductUpdate() {
 
   const handleCreateProductSubmit = async (e) => {
     e.preventDefault()
-    const product = {productId, name, price, quantity, selection, category, description, imageURL}
+    const product = {
+      productId,
+      name,
+      price,
+      quantity,
+      selection,
+      category,
+      description,
+      imageURL,
+    }
     dispatch(updateProduct(product))
   }
 
   return (
     <View imageUrl={createImg}>
-       <Heading>Update Product</Heading>
-       {loadingUpdateProduct && <LoadingSpinner />}
-       {updateProductSuccess && <Message>Product updated!</Message>}
+      <Heading>Update Product</Heading>
+      {isUploading && <LoadingSpinner />}
+      {loadingUpdateProduct && <LoadingSpinner />}
+      {updateProductSuccess && <Message>Product updated!</Message>}
       {updateProductError && <Error>{updateProductError}</Error>}
-     {foundProductInformation && <Form enctype='multipart/form-data' onSubmit={handleCreateProductSubmit}>
-        <Input type='text' value={name} onChange={handleNameChange} />
-        <Input type='number' value={price} onChange={handlePriceChange}/>
-        <Input type='number' value={quantity} onChange={handleQuantityChange} />
-        <Select value={selection} onChange={handleSelectionChange}>
-          <option >Select gender</option>
-          <option value='men'>Men</option>
-          <option value='women'>Women</option>
-        </Select>
-        <Select value={category} name='category' onChange={handleCategoryChange}>
-          <option value='Select category'>Select category</option>
-          <option value='shirt'>Shirt</option>
-          <option value='jumper'>Jumper</option>
-          <option value='suit'>Suit</option>
-          <option value='dress'>Dress</option>
-        </Select>
-        <TextArea dark rows='4' cols='50' type='text' value={description} onChange={handleDescriptionChange} />
-        <Input type='file' onChange={handleUploadImageHandler} />
-        <Button light type='submit'>UPDATE</Button>
-      </Form>
-     }
+      {foundProductInformation && (
+        <Form
+          enctype='multipart/form-data'
+          onSubmit={handleCreateProductSubmit}
+        >
+          <Input type='text' value={name} onChange={handleNameChange} />
+          <Input type='number' value={price} onChange={handlePriceChange} />
+          <Input
+            type='number'
+            value={quantity}
+            onChange={handleQuantityChange}
+          />
+          <Select value={selection} onChange={handleSelectionChange}>
+            <option>Select gender</option>
+            <option value='men'>Men</option>
+            <option value='women'>Women</option>
+          </Select>
+          <Select
+            value={category}
+            name='category'
+            onChange={handleCategoryChange}
+          >
+            <option value='Select category'>Select category</option>
+            <option value='shirt'>Shirt</option>
+            <option value='jumper'>Jumper</option>
+            <option value='suit'>Suit</option>
+            <option value='dress'>Dress</option>
+          </Select>
+          <TextArea
+            dark
+            rows='4'
+            cols='50'
+            type='text'
+            value={description}
+            onChange={handleDescriptionChange}
+          />
+          <Input type='file' onChange={handleUploadImageHandler} />
+          <Button light type='submit'>
+            UPDATE
+          </Button>
+        </Form>
+      )}
     </View>
   )
 }
-

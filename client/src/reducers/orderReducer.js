@@ -8,9 +8,15 @@ import {
   PAY_ORDER_REQUEST,
   PAY_ORDER_SUCCESS,
   PAY_ORDER_FAIL,
+  MARK_DELIVERED_REQUEST,
+  MARK_DELIVERED_SUCCESS,
+  MARK_DELIVERED_FAIL,
   FETCH_MY_ORDERS_REQUEST,
   FETCH_MY_ORDERS_SUCCESS,
-  FETCH_MY_ORDERS_FAIL
+  FETCH_MY_ORDERS_FAIL,
+  FETCH_ALL_ORDERS_REQUEST,
+  FETCH_ALL_ORDERS_SUCCESS,
+  FETCH_ALL_ORDERS_FAIL
 } from '../constants/orderConstants'
 
 export const createOrderReducer = (state = {}, action) => {
@@ -60,6 +66,32 @@ export const fetchMyOrdersReducer = (state = {}, action) => {
       return { fetchMyOrdersLoading: false, myOrders: action.payload }
     case FETCH_MY_ORDERS_FAIL:
       return { fetchMyOrdersLoading: false, fetchMyOrdersError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const fetchAllOrdersReducer = (state = {}, action) => {
+  switch (action.type) {
+    case FETCH_ALL_ORDERS_REQUEST:
+      return { fetchAllOrdersLoading: true }
+    case FETCH_ALL_ORDERS_SUCCESS:
+      return { fetchAllOrdersLoading: false, allOrders: action.payload }
+    case FETCH_ALL_ORDERS_FAIL:
+      return { fetchAllOrdersLoading: false, fetchAllOrdersError: action.payload }
+    default:
+      return state
+  }
+}
+
+export const markOrderDeliveredReducer = (state = {}, action) => {
+  switch (action.type) {
+    case MARK_DELIVERED_REQUEST:
+      return { loadingMarkOrderDelivered: true }
+    case MARK_DELIVERED_SUCCESS:
+      return { loadingMarkOrderDelivered: false, markOrderDeliveredSuccess: action.payload }
+    case MARK_DELIVERED_FAIL:
+      return { loadingMarkOrderDelivered: false, markOrderDeliveredError: action.payload }
     default:
       return state
   }

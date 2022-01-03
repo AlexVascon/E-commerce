@@ -1,14 +1,22 @@
-import React, {useState} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { createProduct } from '../actions/productActions'
 import instance from '../service/api'
 import { Form, Input, Select, TextArea } from '../components/Form'
-import { Button, View, Error, Heading, Message, LoadingSpinner } from '../components/MyLibrary'
+import {
+  Button,
+  View,
+  Error,
+  Heading,
+  Message,
+  LoadingSpinner,
+} from '../components/MyLibrary'
 import editImg from '../assets/cloudy_mountain_DARK.jpg'
 
 export default function ProductCreate() {
   const dispatch = useDispatch()
-  const {createProductSuccess, createProductError, loadingCreateProduct} = useSelector((state) => state.createProduct)
+  const { createProductSuccess, createProductError, loadingCreateProduct } =
+    useSelector((state) => state.createProduct)
   const [name, setName] = useState('')
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
@@ -31,9 +39,9 @@ export default function ProductCreate() {
       const uploadData = new FormData()
       uploadData.append('image', e.target.files[0])
       setIsUploading(true)
-      const {data} = await instance.post('/upload/product', uploadData)
+      const { data } = await instance.post('/upload/product', uploadData)
       setImageURL(data?.cloud_url)
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     } finally {
       setIsUploading(false)
@@ -42,35 +50,61 @@ export default function ProductCreate() {
 
   const handleCreateProductSubmit = async (e) => {
     e.preventDefault()
-    const product = {name, price, quantity, selection, category, description, imageURL}
+    const product = {
+      name,
+      price,
+      quantity,
+      selection,
+      category,
+      description,
+      imageURL,
+    }
     dispatch(createProduct(product))
   }
 
   return (
     <View imageUrl={editImg}>
-     <Heading>Create Product</Heading>
-     {loadingCreateProduct && <LoadingSpinner />}
-     {createProductSuccess && <Message>Product created!</Message>}
-    {createProductError && <Error>{createProductError}</Error>}
+      <Heading>Create Product</Heading>
+      {isUploading && <LoadingSpinner />}
+      {loadingCreateProduct && <LoadingSpinner />}
+      {createProductSuccess && <Message>Product created!</Message>}
+      {createProductError && <Error>{createProductError}</Error>}
       <Form enctype='multipart/form-data' onSubmit={handleCreateProductSubmit}>
         <Input type='text' placeholder='Name' onChange={handleNameChange} />
-        <Input type='number' placeholder='Price' onChange={handlePriceChange}/>
-        <Input type='number' placeholder='Quantity' onChange={handleQuantityChange} />
+        <Input type='number' placeholder='Price' onChange={handlePriceChange} />
+        <Input
+          type='number'
+          placeholder='Quantity'
+          onChange={handleQuantityChange}
+        />
         <Select value='' name='selection' onChange={handleSelectionChange}>
-          <option >Select gender</option>
+          <option>Select gender</option>
           <option value='men'>Men</option>
           <option value='women'>Women</option>
         </Select>
-        <Select value='Select category' name='category' onChange={handleCategoryChange}>
+        <Select
+          value='Select category'
+          name='category'
+          onChange={handleCategoryChange}
+        >
           <option value='Select category'>Select category</option>
           <option value='shirt'>Shirt</option>
           <option value='jumper'>Jumper</option>
           <option value='suit'>Suit</option>
           <option value='dress'>Dress</option>
         </Select>
-        <TextArea dark rows='4' cols='50' type='text' placeholder='description' onChange={handleDescriptionChange} />
-        <Input type='file' onChange={handleUploadImageHandler}  />
-        <Button light type='submit'>CREATE</Button>
+        <TextArea
+          dark
+          rows='4'
+          cols='50'
+          type='text'
+          placeholder='description'
+          onChange={handleDescriptionChange}
+        />
+        <Input type='file' onChange={handleUploadImageHandler} />
+        <Button light type='submit'>
+          CREATE
+        </Button>
       </Form>
     </View>
   )

@@ -18,7 +18,13 @@ import {
   SAVE_SHIPPING_FAIL,
   FETCH_SHIPPING_REQUEST,
   FETCH_SHIPPING_SUCCESS,
-  FETCH_SHIPPING_FAIL
+  FETCH_SHIPPING_FAIL,
+  FETCH_ALL_USERS_REQUEST,
+  FETCH_ALL_USERS_SUCCESS,
+  FETCH_ALL_USERS_FAIL,
+  DELETE_USER_REQUEST,
+  DELETE_USER_SUCCESS,
+  DELETE_USER_FAIL
 } from '../constants/userConstants'
 
 export const registerReducer = (state = {}, action) => {
@@ -84,6 +90,19 @@ export const editUserReducer = (state = {}, action) => {
   }
 }
 
+export const deleteUserReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_USER_REQUEST:
+      return { loadingDeleteUser: true }
+    case DELETE_USER_SUCCESS:
+      return { loadingDeleteUser: false, deleteUserSuccess: action.payload }
+    case DELETE_USER_FAIL:
+      return { loadingDeleteUser: false, deleteUserError: action.payload }
+    default:
+      return state
+  }
+}
+
 export const saveShippingInformationReducer = (state = {}, action) => {
   switch (action.type) {
     case SAVE_SHIPPING_REQUEST:
@@ -109,3 +128,17 @@ export const fetchShippingInformationReducer = (state = {}, action) => {
       return state
   }
 }
+
+export const fetchAllUsersReducer = (state = {}, action) => {
+  switch (action.type) {
+    case FETCH_ALL_USERS_REQUEST:
+      return { loadingFetchAllUsers: true }
+    case FETCH_ALL_USERS_SUCCESS:
+      return { loadingFetchAllUsers: false, allUsers: action.payload }
+    case FETCH_ALL_USERS_FAIL:
+      return { loadingFetchAllUsers: false, fetchAllUsersError: action.payload }
+    default:
+      return state
+  }
+}
+

@@ -1,4 +1,4 @@
-import {createGlobalStyle} from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
 body {
@@ -6,6 +6,8 @@ body {
   padding: 0px;
   min - height: 100 vh;
   min - height: -webkit - fill - available;
+  font-family: 'Mukta', sans-serif;
+  color: #777;
 }
 html {
    height: -webkit - fill - available;
@@ -43,6 +45,7 @@ ${'' /* style pagination library */}
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   @media (min-width: 500px) {
   height: 20rem;
 }

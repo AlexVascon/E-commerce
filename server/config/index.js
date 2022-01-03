@@ -4,7 +4,12 @@ import cors from 'cors'
 import morgan from 'morgan'
 
 export default (app) => {
-  app.set('trust proxy', 1)
+  app.use(
+    cors({
+      origin: '*',
+      credentials: true,
+    })
+  )
 
   if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'))

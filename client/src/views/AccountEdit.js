@@ -1,15 +1,23 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { authenticate, userEdit } from '../actions/userActions'
 import { Button } from '../components/MyLibrary'
 import { Form, Input } from '../components/Form'
-import { View, Error, Heading, LoadingSpinner, Message } from '../components/MyLibrary'
+import {
+  View,
+  Error,
+  Heading,
+  LoadingSpinner,
+  Message,
+} from '../components/MyLibrary'
 import accountImg from '../assets/greyscale_mountains_DARK.jpg'
 
 export default function AccountEdit() {
   const dispatch = useDispatch()
-  const {userInfo} = useSelector((state) => state.authenticate)
-  const {editUserSuccess, editUserError, loadingEditUser} = useSelector((state) => state.editUser)
+  const { userInfo } = useSelector((state) => state.authenticate)
+  const { editUserSuccess, editUserError, loadingEditUser } = useSelector(
+    (state) => state.editUser
+  )
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,10 +30,10 @@ export default function AccountEdit() {
 
   useEffect(() => {
     dispatch(authenticate())
-  },[dispatch])
+  }, [dispatch])
 
   useEffect(() => {
-    if(userInfo) {
+    if (userInfo) {
       setUsername(userInfo.username)
       setEmail(userInfo.email)
       setPassword(userInfo.password)
@@ -34,25 +42,42 @@ export default function AccountEdit() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const body = {username, email, password, confirmPassword}
+    const body = { username, email, password, confirmPassword }
     dispatch(userEdit(body))
   }
   return (
     <View imageUrl={accountImg}>
-    <Heading>Edit account</Heading>
-    {loadingEditUser && <LoadingSpinner />}
-    {editUserSuccess && <Message top='0%' bottom='0%'>Information updated!</Message>}
-    {editUserError && <Error top='0%' bottom='0%'>{editUserError}</Error>}
-      {userInfo && 
-      <Form onSubmit={handleSubmit}>
-        <Input type='text' value={username} onChange={handleUsernameChange} />
-        <Input type='email' value={email} onChange={handleEmailChange} />
-        <Input type='password' placeholder='Type new password' onChange={handlePasswordChange} />
-        <Input type='password' placeholder='Confirm new password' onChange={handleConfirmPasswordChange} />
-        <Button light type='submit' >CONFIRM EDIT</Button>
-      </Form>
-      }
+      <Heading>Edit account</Heading>
+      {loadingEditUser && <LoadingSpinner />}
+      {editUserSuccess && (
+        <Message top='0%' bottom='0%'>
+          Information updated!
+        </Message>
+      )}
+      {editUserError && (
+        <Error top='0%' bottom='0%'>
+          {editUserError}
+        </Error>
+      )}
+      {userInfo && (
+        <Form onSubmit={handleSubmit}>
+          <Input type='text' value={username} onChange={handleUsernameChange} />
+          <Input type='email' value={email} onChange={handleEmailChange} />
+          <Input
+            type='password'
+            placeholder='Type new password'
+            onChange={handlePasswordChange}
+          />
+          <Input
+            type='password'
+            placeholder='Confirm new password'
+            onChange={handleConfirmPasswordChange}
+          />
+          <Button light type='submit'>
+            CONFIRM EDIT
+          </Button>
+        </Form>
+      )}
     </View>
   )
 }
-

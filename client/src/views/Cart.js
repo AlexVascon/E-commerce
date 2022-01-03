@@ -40,8 +40,8 @@ export default function Cart() {
 
   return (
     <View responsive imageUrl={process.env.PUBLIC_URL + cartImg}>
-      <Heading static left='1.5rem' size='1rem'>SHOPPING CART</Heading>
       <CartItems scroll gap='0.7rem'>
+      <Heading size='1rem'>SHOPPING CART</Heading>
       {cartItems && cartItems.map((item, index) => {
         return (
           <Item height='10rem' shadow background='white' width='90%' key={item.itemId} >
@@ -53,9 +53,18 @@ export default function Cart() {
             <Price>${item.price}</Price>
           </Description>
           <Edit flex='1' column center >
+          {(item.quantity !== item.stock) ? 
             <Increase onClick={() => updateItemQuantity(1,item.itemId, index)}>+</Increase>
+            :
+            <Increase disabled>+</Increase>
+          }
             <Quantity>{item && item.quantity}</Quantity>
-            <Decrease onClick={() => updateItemQuantity(-1,item.itemId, index)}>-</Decrease>
+            {item.quantity === 0 ?
+              <Decrease disabled>-</Decrease>
+              :
+              <Decrease onClick={() => updateItemQuantity(-1,item.itemId, index)}>-</Decrease>
+          }
+            
           </Edit>
         </Item>
         )

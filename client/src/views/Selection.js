@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../actions/productActions'
-import { View, Section, Absolute, Error } from '../components/MyLibrary'
+import {
+  View,
+  Section,
+  Absolute,
+  Error,
+  LoadingSpinner,
+} from '../components/MyLibrary'
 import MenImg from '../assets/men.jpg'
 import WomenImg from '../assets/women.jpg'
 import cardBackgroundImg from '../assets/donught_corner_img.jpg'
@@ -13,21 +19,43 @@ import ReactStars from 'react-rating-stars-component'
 export default function Selection() {
   const { gender } = useParams()
   const dispatch = useDispatch()
-  const { foundProducts, fetchProductsError, fetchProductsLoading } = useSelector((state) => state.fetchProducts)
-  const [category, setCategory] = useState('shirt') // default
-  const [pageNumber, setPageNumber] = useState(0)
+  const pageStorage = localStorage.getItem('selectionPage')
+  let page
+  let categoryType
+  if (pageStorage) {
+    const parsedStorage = JSON.parse(pageStorage)
+    page = Number(parsedStorage.page)
+    categoryType = parsedStorage.categoryType
+  }
+  let pageNumber = page || 0
+  const { foundProducts, fetchProductsError, fetchProductsLoading } =
+    useSelector((state) => state.fetchProducts)
+  const [category, setCategory] = useState(categoryType || 'shirt') // default
+  const [updatePage, setUpdatePage] = useState(pageNumber || 0)
 
   const requestCategory = (category) => {
     setCategory(category)
-    setPageNumber((pageNumber) => (pageNumber = 0))
+    setUpdatePage((pageNumber) => (pageNumber = 0))
+    pageNumber = 0
   }
 
   useEffect(() => {
-    dispatch(fetchProducts(gender, category, pageNumber))
-  }, [dispatch, category, pageNumber, gender])
+    if (pageStorage) {
+      const parsedStorage = JSON.parse(pageStorage)
+      if (parsedStorage.selectionType !== gender) {
+        localStorage.removeItem('selectionPage')
+        setCategory('shirt')
+        setUpdatePage(0)
+      }
+    }
+  }, [gender, pageStorage])
+
+  useEffect(() => {
+    dispatch(fetchProducts(gender, category, updatePage))
+  }, [dispatch, category, updatePage, gender])
 
   const changePage = ({ selected }) => {
-    setPageNumber(selected)
+    setUpdatePage(selected)
   }
 
   const pagnation = () => {
@@ -35,7 +63,7 @@ export default function Selection() {
       <ReactPaginate
         previousLabel={'Previous'}
         nextLabel={'Next'}
-        pageCount={2}
+        pageCount={foundProducts && foundProducts.pageCount}
         onPageChange={changePage}
         forcePage={pageNumber}
         containerClassName={'pagination-btns'}
@@ -84,7 +112,8 @@ export default function Selection() {
       </Section>
       <Section>
         <SelectionItems>
-        {fetchProductsError && <Error>{fetchProductsError}</Error>}
+          {fetchProductsLoading && <LoadingSpinner size='10rem' />}
+          {fetchProductsError && <Error>{fetchProductsError}</Error>}
           {foundProducts &&
             foundProducts.products.map((item) => {
               return (
@@ -97,10 +126,13 @@ export default function Selection() {
                       activeColor='#ffd700'
                       edit={false}
                     />
+                    <ReviewsAmount>
+                      {item.reviews && item.reviews.length > 0}
+                    </ReviewsAmount>
                     {!item.rating && <NoRating>No Rating</NoRating>}
                   </Rating>
                   <Image as='img' width='60%' z='1' src={item.image} />
-                  <Name as='b' width='90%' bottom='18%' left='5%' z='2'>
+                  <Name as='b' width='90%' bottom='25%' left='5%' z='2'>
                     {item.title}
                   </Name>
                   <Price as='span' width='20%' bottom='5%' left='5%'>
@@ -146,14 +178,14 @@ const Card = styled(Link)`
     height: 20rem;
     margin: 1rem;
   }
-`;
+`
 const Name = styled(Absolute)`
   font-size: 3rem;
   font-family: 'Roboto', sans-serif;
   overflow-wrap: break-word;
   line-height: 2.7rem;
   color: rgb(207, 159, 0);
-`;
+`
 const Price = styled(Absolute)`
   font-size: 1.2rem;
   font-weight: 700;
@@ -162,7 +194,7 @@ const Price = styled(Absolute)`
   color: white;
   border-radius: 2rem;
   background-color: rgba(82, 81, 81, 0.788);
-`;
+`
 const Image = styled(Absolute)`
   height: 100%;
   align-self: flex-end;
@@ -170,13 +202,15 @@ const Image = styled(Absolute)`
   margin: 0;
   z-index: 1;
   background-color: transparent;
-`;
-const Rating = styled(Absolute)``;
+`
+const Rating = styled(Absolute)``
 
 const NoRating = styled.p`
   color: #777;
   margin: 0%;
-`;
+`
+const ReviewsAmount = styled(NoRating)``
+
 const Categories = styled.ul`
   display: flex;
   color: rgba(255, 246, 189, 0.822);
@@ -185,7 +219,7 @@ const Categories = styled.ul`
   justify-content: center;
   gap: 3rem;
   padding: 0.7rem 0;
-`;
+`
 const Choice = styled.li`
   display: flex;
   list-style-type: none;
@@ -195,8 +229,8 @@ const Choice = styled.li`
   }
   ${(props) =>
     props.isActive &&
-    'text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;'}
-`;
+    'text-shadow: 0 -1px 4px #ff0, 0 -2px 10px #ff0, 0px 0px 20px #ff0;'}
+`
 const SelectionItems = styled.div`
   display: flex;
   justify-content: center;
@@ -206,7 +240,7 @@ const SelectionItems = styled.div`
   height: 90%;
   overflow-y: scroll;
   background-color: white;
-`;
+`
 const Indicator = styled.p`
   position: absolute;
   bottom: 15%;
@@ -215,5 +249,4 @@ const Indicator = styled.p`
   margin: auto;
   color: rgba(255, 246, 189, 0.822);
   width: 5rem;
-`;
-
+`

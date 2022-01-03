@@ -1,30 +1,35 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllProducts, deleteProduct } from '../actions/productActions'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { View, Heading, Error } from '../components/MyLibrary'
+import { View, Heading, Error, LoadingSpinner } from '../components/MyLibrary'
+import { Table, TR, TH, TD, Button } from '../components/Table'
 import ReactPaginate from 'react-paginate'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 export default function ProductList() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { foundProducts, fetchAllProductsError } = useSelector((state) => state.fetchAllProducts)
-  const [pageNumber, setPageNumber] = useState(0)
+  let page
+  const pageStorage = localStorage.getItem('productListPage')
+  if (pageStorage) page = Number(pageStorage)
+  const { foundProducts, fetchAllProductsError, fetchAllProductsLoading } =
+    useSelector((state) => state.fetchAllProducts)
+  const [pageNumber, setPageNumber] = useState(page || 0)
 
   useEffect(() => {
     dispatch(fetchAllProducts(pageNumber))
   }, [dispatch, pageNumber])
 
   const changePage = ({ selected }) => setPageNumber(selected)
-  
+
   const pagnation = () => {
     return (
       <ReactPaginate
         previousLabel={'Previous'}
         nextLabel={'Next'}
-        pageCount={foundProducts && foundProducts.count / 10}
+        pageCount={foundProducts && foundProducts.pageCount}
         onPageChange={changePage}
         forcePage={pageNumber}
         containerClassName={'pagination-btns'}
@@ -37,100 +42,65 @@ export default function ProductList() {
   }
   return (
     <View>
-          <Heading center size='1.5rem'>
+      <Heading center size='1.5rem' bottom='1%' top='1%'>
         Products
       </Heading>
-      <Create onClick={() => navigate('/product/create')}>Create +</Create>
+      <Create onClick={() => navigate('/admin/product/create')}>
+        Create +
+      </Create>
+
       <Table>
-        <Row>
-          <RowTitle width='7%'>ID</RowTitle>
-          <RowTitle width='10%'>NAME</RowTitle>
-          <RowTitle width='6%'>PRICE</RowTitle>
-          <RowTitle width='8%'>SELECTION</RowTitle>
-          <RowTitle width='6%'>CATEGORY</RowTitle>
-          <RowTitle width='6%'>EDIT</RowTitle>
-          <RowTitle width='6%'>DELETE</RowTitle>
-        </Row>
+        <thead>
+          <TR>
+            <TH width='7%'>ID</TH>
+            <TH width='10%'>NAME</TH>
+            <TH width='6%'>PRICE</TH>
+            <TH width='8%'>SELECTION</TH>
+            <TH width='6%'>CATEGORY</TH>
+            <TH width='6%'>EDIT</TH>
+            <TH width='6%'>DELETE</TH>
+          </TR>
+        </thead>
         <tbody>
-        {foundProducts &&
-          foundProducts.products.map((product) => {
-            return (
-              <Row key={product._id}>
-                <Data>{product._id}</Data>
-                <Data>{product.title}</Data>
-                <Data>${product.price}</Data>
-                <Data>{product.selection}</Data>
-                <Data>{product.category}</Data>
-                <Data>
-                    <Button onClick={() => navigate(`/product/update/${product._id}`)}>
+          {foundProducts &&
+            foundProducts.products.map((product) => {
+              return (
+                <TR key={product._id}>
+                  <TD>{product._id}</TD>
+                  <TD>{product.title}</TD>
+                  <TD>${product.price}</TD>
+                  <TD>{product.selection}</TD>
+                  <TD>{product.category}</TD>
+                  <TD>
+                    <Button
+                      onClick={() =>
+                        navigate(`/admin/product/update/${product._id}`)
+                      }
+                    >
                       Edit
                     </Button>
-                </Data>
-                <Data>
+                  </TD>
+                  <TD>
                     <Bin onClick={() => dispatch(deleteProduct(product._id))}>
                       Delete
                     </Bin>
-                </Data>
-              </Row>
-            )
-          })}
-          </tbody>
+                  </TD>
+                </TR>
+              )
+            })}
+        </tbody>
       </Table>
+      {fetchAllProductsLoading && <LoadingSpinner size='10rem' />}
       {fetchAllProductsError && <Error>{fetchAllProductsError}</Error>}
       {pagnation()}
     </View>
   )
 }
 
-const Table = styled.table`
-  width: 100%;
-  bproduct-collapse: collapse;
-  overflow-wrap: break-word;
-  table-layout:fixed;
-`
-const Row = styled.tr`
-  width: 5%;
-    overflow-wrap: break-word;
-  &:nth-child(even) {
-    background-color: #dddddd;
-  }
-`
-const RowTitle = styled.th`
-  bproduct: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-  overflow-wrap: break-word;
-  @media(max-width: 415px) {
-    font-size: .6rem;
-    width: ${props => props.width}
-    overflow-wrap: break-word;
-  }
-`
-const Data = styled.td`
-  bproduct: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-  @media(max-width: 415px) {
-    font-size: .8rem;
-    max-width: 2rem;
-    overflow-x: scroll;
-  }
-`
-const Button = styled.button`
-  border: none;
-  background-color: rgba(235, 198, 36, 0.945);
-  color: black;
-  font-weight: 900;
-  padding: 0.2rem;
-  border-radius: 0.3rem;
-  &:hover {
-    cursor: pointer;
-  }
-`
 const Create = styled(Button)`
-position: absolute;
-margin: auto;
-right: 5%;
-top: 1%;
+  position: absolute;
+  margin: auto;
+  right: 5%;
+  top: 1%;
 `
 const Bin = styled(DeleteIcon)``

@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import instance from '../service/api'
 import { Navigate, Outlet } from 'react-router'
-import { LoadingSpinner } from './MyLibrary'
+import { LoadingSpinner, View  } from './MyLibrary'
 
 export default function PrivateRoute() {
   const [user, setUser] = useState(undefined)
@@ -19,7 +19,12 @@ export default function PrivateRoute() {
     fetchUser()
   }, [])
 
-  if(!user) return <LoadingSpinner big />
+  if(!user) {
+    return (
+    <View center>
+      <LoadingSpinner size='15rem' />
+    </View>
+  )} 
 
   return user?.username ? <Outlet /> : <Navigate to='/portal' />
 }

@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { fetchOrder, payOrder } from "../actions/orderActions"
-import { View, Error, Row, RowText } from "../components/MyLibrary"
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchOrder, payOrder } from '../actions/orderActions'
+import { View, Error, Row, RowText, Button } from '../components/MyLibrary'
 import {
   Elements,
   CardElement,
   useElements,
   useStripe,
-} from "@stripe/react-stripe-js"
-import { loadStripe } from "@stripe/stripe-js"
-import styled from "styled-components"
-import { useNavigate, useParams } from "react-router-dom"
-import CircularProgress from "@mui/material/CircularProgress"
-import Dialog from "@mui/material/Dialog"
-
-const PUBLIC_KEY =
-  "pk_test_51K0lRmC2ZHbTWgUUms603vE2wXs46t4H9SuriRnsBrajgFxs9UvOhy960P5mYXwpD34QHLHf81FSmoD9XOOPV9NU000WvKX0zP"
+} from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
+import styled from 'styled-components'
+import { useNavigate, useParams } from 'react-router-dom'
+import CircularProgress from '@mui/material/CircularProgress'
+import Dialog from '@mui/material/Dialog'
+import paymentSuccessImg from '../assets/payment-success.png'
 
 export default function Pay() {
   const { orderId } = useParams()
@@ -25,12 +23,12 @@ export default function Pay() {
   const { payOrderError, payOrderSuccess, payOrderLoading } = useSelector(
     (state) => state.payOrder
   )
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   useEffect(() => {
     dispatch(fetchOrder(orderId))
-  }, [dispatch, orderId]);
+  }, [dispatch, orderId])
 
-  const PaymentForm = (props) => {
+  const PaymentForm = () => {
     const stripe = useStripe()
     const elements = useElements()
 
@@ -38,7 +36,7 @@ export default function Pay() {
       e.preventDefault()
       try {
         const { error, paymentMethod } = await stripe.createPaymentMethod({
-          type: "card",
+          type: 'card',
           card: elements.getElement(CardElement),
         })
         dispatch(payOrder(error, orderId, paymentMethod))
@@ -56,31 +54,31 @@ export default function Pay() {
         </Row>
         <Row>
           <RowText>Tax:</RowText>
-          <RowText>${props?.taxPrice && props.taxPrice}</RowText>
+          <RowText>${foundOrder && foundOrder.taxPrice}</RowText>
         </Row>
         <Row>
           <RowText>Total:</RowText>
           <RowText>
-            ${props?.totalPrice && props.totalPrice + props?.taxPrice}
+            ${foundOrder && foundOrder.totalPrice + foundOrder.taxPrice}
           </RowText>
         </Row>
-        <PayButton type="submit">Pay</PayButton>
+        <PayButton type='submit'>Pay</PayButton>
       </PaymentContainer>
     )
   }
 
   useEffect(() => {
     if (payOrderSuccess) setOpen(true)
-  }, [payOrderSuccess, navigate])
+  }, [payOrderSuccess])
 
   const closeSuccessScreen = () => {
     setOpen(false)
-    navigate("/account")
+    navigate('/account')
   }
 
   return (
     <View>
-      <Elements stripe={loadStripe(PUBLIC_KEY)}>
+      <Elements stripe={loadStripe(process.env.PUBLIC_KEY)}>
         {payOrderError && <Error>{payOrderError}</Error>}
         <Disclaimer>
           Warning: Stripe payment is in test mode. None of the products are
@@ -93,16 +91,14 @@ export default function Pay() {
             <ProcessingSpinner />
           </ProcessingPayment>
         )}
-        {foundOrder && (
-          <PaymentForm
-            totalPrice={foundOrder.totalPrice}
-            taxPrice={foundOrder.taxPrice}
-          />
-        )}
+        {foundOrder && <PaymentForm />}
       </Elements>
       <Dialog open={open} onClose={closeSuccessScreen}>
         <SuccessScreen>
-          Payment Success. Click anywhere to return to account.
+          <SuccessImage src={paymentSuccessImg} />
+          <b>Payment success</b>
+          <p>Your order is being prepaird (not really)</p>
+          <Button onClick={closeSuccessScreen}>Continue</Button>
         </SuccessScreen>
       </Dialog>
     </View>
@@ -143,6 +139,9 @@ const PayButton = styled.button`
   padding: 0.3rem 0.7rem;
   color: white;
   border-radius: 0.8rem;
+  &:hover {
+    cursor: pointer;
+  }
 `
 const ProcessingPayment = styled.div`
   width: 80%;
@@ -164,18 +163,25 @@ const ProcessingSpinner = styled(CircularProgress)`
   justify-self: center;
   align-self: center;
 `
-const SuccessScreen = styled(Disclaimer)`
-  width: 80vw;
-  padding: 1rem;
-  border: 2px solid rgb(214, 175, 1);
-  background-color: white;
-  text-align: center;
+const SuccessScreen = styled.div`
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  padding: 1.5rem;
   justify-self: center;
-  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  border: none;
   margin: auto;
-  position: fixed;
-  top: 45%;
-  left: 0%;
-  right: 0%;
-  border-radius: 1rem;
+  margin-bottom: 0;
+  @media (min-width: 550px) {
+    max-width: 30rem;
+  }
+`
+const SuccessImage = styled.img`
+  width: 5rem;
+  height: 5rem;
+  background-color: transparent;
 `

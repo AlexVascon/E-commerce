@@ -20,7 +20,9 @@ import {
   fetchShippingInformationReducer,
   loginReducer,
   logoutReducer,
-  editUserReducer
+  editUserReducer,
+  fetchAllUsersReducer,
+  deleteUserReducer
 } from './reducers/userReducer'
 import {
   addCartItemToAnonymousReducer,
@@ -30,8 +32,10 @@ import {
 } from './reducers/cartReducer'
 import {
   createOrderReducer,
+  fetchAllOrdersReducer,
   fetchMyOrdersReducer,
   fetchOrderReducer,
+  markOrderDeliveredReducer,
   payOrderReducer,
 } from './reducers/orderReducer'
 
@@ -44,6 +48,8 @@ const reducer = combineReducers({
   logout: logoutReducer,
   authenticate: authenticationReducer,
   editUser: editUserReducer,
+  deleteUser: deleteUserReducer,
+  fetchAllUsers: fetchAllUsersReducer,
   saveShippingInformation: saveShippingInformationReducer,
   fetchShippingInformation: fetchShippingInformationReducer,
   fetchProductReviews: fetchProductReviewsReducer,
@@ -59,7 +65,9 @@ const reducer = combineReducers({
   removeCartItem: removeCartItemReducer,
   createOrder: createOrderReducer,
   fetchOrder: fetchOrderReducer,
+  fetchAllOrders: fetchAllOrdersReducer,
   payOrder: payOrderReducer,
+  markOrderDelivered: markOrderDeliveredReducer,
   fetchMyOrders: fetchMyOrdersReducer,
 })
 const initialState = {}

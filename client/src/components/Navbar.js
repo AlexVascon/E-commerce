@@ -59,7 +59,9 @@ export default function Navbar() {
           {user?.username && <MobileLink to='/account'>Account</MobileLink>}
           {user?.username && (
             <MobileLink to='/cart'>
-              <CartCounter badgeContent={cart && cart.items.length}>
+              <CartCounter
+                badgeContent={cart && cart.items && cart.items.length}
+              >
                 Cart
               </CartCounter>
             </MobileLink>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllOrders } from '../actions/orderActions'
-import { View, Heading, LoadingSpinner } from '../components/MyLibrary'
+import { View, Heading, LoadingSpinner, Error } from '../components/MyLibrary'
 import { Table, TR, TH, TD, Button } from '../components/Table'
 import { useNavigate } from 'react-router-dom'
 import CloseIcon from '@mui/icons-material/Close'
@@ -10,7 +10,7 @@ import ReactPaginate from 'react-paginate'
 export default function OrderList() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { allOrders, fetchAllOrdersLoading } = useSelector(
+  const { allOrders, fetchAllOrdersLoading, fetchAllOrdersError } = useSelector(
     (state) => state.fetchAllOrders
   )
   const [pageNumber, setPageNumber] = useState(0)
@@ -43,7 +43,6 @@ export default function OrderList() {
       <Heading center size='1.5rem' top='1%' bottom='1%'>
         All Orders
       </Heading>
-      {fetchAllOrdersLoading && <LoadingSpinner />}
       <Table>
         <thead>
           <TR>
@@ -90,6 +89,8 @@ export default function OrderList() {
         </tbody>
       </Table>
       {allOrders && pagination()}
+      {fetchAllOrdersLoading && <LoadingSpinner size='10rem' />}
+      {fetchAllOrdersError && <Error>{fetchAllOrdersError}</Error>}
     </View>
   )
 }

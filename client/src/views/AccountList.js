@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAllUsers, deleteUser } from '../actions/userActions'
-import { Heading, View } from '../components/MyLibrary'
+import { Error, Heading, LoadingSpinner, View } from '../components/MyLibrary'
 import { Table, TR, TH, TD } from '../components/Table'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
@@ -10,7 +10,9 @@ import ReactPaginate from 'react-paginate'
 
 export default function AccountList() {
   const dispatch = useDispatch()
-  const { allUsers } = useSelector((state) => state.fetchAllUsers)
+  const { allUsers, fetchAllUsersError, loadingFetchAllUsers } = useSelector(
+    (state) => state.fetchAllUsers
+  )
   const [pageNumber, setPageNumber] = useState(0)
 
   useEffect(() => {
@@ -81,6 +83,8 @@ export default function AccountList() {
         </tbody>
       </Table>
       {allUsers && pagination()}
+      {loadingFetchAllUsers && <LoadingSpinner size='10rem' />}
+      {fetchAllUsersError && <Error>{fetchAllUsersError}</Error>}
     </View>
   )
 }

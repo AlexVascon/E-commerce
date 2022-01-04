@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMyOrders } from '../actions/orderActions'
 import { useNavigate } from 'react-router-dom'
 import { View, Heading, Error, LoadingSpinner } from '../components/MyLibrary'
 import { Table, TR, TH, TD, Button } from '../components/Table'
+import ReactPaginate from 'react-paginate'
 
 export default function MyOrders() {
   const navigate = useNavigate()
@@ -11,17 +12,36 @@ export default function MyOrders() {
   const { myOrders, fetchMyOrdersError, fetchMyOrdersLoading } = useSelector(
     (state) => state.fetchMyOrders
   )
+  const [pageNumber, setPageNumber] = useState(0)
 
   useEffect(() => {
     dispatch(fetchMyOrders())
   }, [dispatch])
+
+  const changePage = ({ selected }) => setPageNumber(selected)
+
+  const pagination = () => {
+    return (
+      <ReactPaginate
+        previousLabel={'Previous'}
+        nextLabel={'Next'}
+        pageCount={myOrders && myOrders.pageCount}
+        onPageChange={changePage}
+        forcePage={pageNumber}
+        containerClassName={'pagination-btns'}
+        previousLinkClassName={'previous-btn'}
+        nextLinkClassName={'next-btn'}
+        disabledClassName={'pagination-disabled'}
+        activeClassName={'pagination-active'}
+      />
+    )
+  }
 
   return (
     <View>
       <Heading center size='1.5rem' bottom='1%' top='1%'>
         My Orders
       </Heading>
-      {fetchMyOrdersLoading && <LoadingSpinner />}
       <Table>
         <thead>
           <TR>
@@ -61,6 +81,8 @@ export default function MyOrders() {
             })}
         </tbody>
       </Table>
+      {myOrders && pagination()}
+      {fetchMyOrdersLoading && <LoadingSpinner size='10rem' />}
       {fetchMyOrdersError && <Error>{fetchMyOrdersError}</Error>}
     </View>
   )

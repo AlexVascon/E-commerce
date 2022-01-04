@@ -21,14 +21,22 @@ export default function Footer() {
           </Group>
           <Group>
             <GitHubIcon fontSize='small' />{' '}
-            <a href='https://github.com/AlexVascon'>
+            <a
+              href='https://github.com/AlexVascon'
+              rel='noopener noreferrer'
+              target='_blank'
+            >
               https://github.com/AlexVascon
             </a>
           </Group>
           <Group>
             <LinkedInIcon fontSize='small' />{' '}
-            <a href='https://www.linkedin.com/feed/'>
-              https://www.linkedin.com/feed/
+            <a
+              href='https://www.linkedin.com/in/alex-vasconcelos-de-almeida/'
+              rel='noopener noreferrer'
+              target='_blank'
+            >
+              https://www.linkedin.com/in/alex-vasconcelos-de-almeida/
             </a>
           </Group>
         </SubEl>
@@ -84,4 +92,7 @@ const Group = styled(SubEl)`
 `
 const CopyRight = styled(Heading)`
   font-size: 0.5rem;
+  @media (min-width: 600px) {
+    font-size: 1rem;
+  }
 `

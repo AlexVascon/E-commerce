@@ -110,7 +110,7 @@ export default function Navbar() {
 }
 
 const Nav = styled.nav`
-  margin: 0 !important;
+  height: 5rem;
   width: 100%;
   position: relative;
   align-items: center;

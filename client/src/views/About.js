@@ -26,12 +26,20 @@ export default function About() {
         <EmailIcon /> 1vasconalex1@gmail.com
         <br />
         <GitHubIcon />{' '}
-        <a href='https://github.com/AlexVascon'>
+        <a
+          href='https://github.com/AlexVascon'
+          rel='noopener noreferrer'
+          target='_blank'
+        >
           https://github.com/AlexVascon
         </a>
         <br />
         <LinkedInIcon />{' '}
-        <a href='https://www.linkedin.com/in/alex-vasconcelos-de-almeida/'>
+        <a
+          href='https://www.linkedin.com/in/alex-vasconcelos-de-almeida/'
+          rel='noopener noreferrer'
+          target='_blank'
+        >
           https://www.linkedin.com/in/alex-vasconcelos-de-almeida/
         </a>
       </AboutContainer>

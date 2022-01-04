@@ -203,9 +203,13 @@ const Confirm = styled(Button)`
   margin-bottom: 0.5rem;
 `
 const ItemSubTitle = styled(SubTitle)`
+  width: 30%;
+  margin-left: 5%;
   @media (min-width: 600px) {
     position: absolute;
     top: 1%;
-    left: 55%;
+    left: 53%;
+    margin-left: 0%;
+    width: 100%;
   }
 `

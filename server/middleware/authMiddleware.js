@@ -8,15 +8,15 @@ export const authenticateToken = async (req, res, next) => {
       req.headers.authorization &&
       req.headers.authorization.startsWith('Bearer')
     ) {
-        token = req.headers.authorization.split(' ')[1]
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-        req.user = await User.findById(decoded._id).select('-password')
-        next()
-  } else {
-    return res.status(401).send({message: 'Not authorized, no token'})
-  }
+      token = req.headers.authorization.split(' ')[1]
+      const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+      req.user = await User.findById(decoded._id).select('-password')
+      next()
+    } else {
+      return res.status(401).send({ messages: 'Not authorized, no token' })
+    }
   } catch (err) {
-    return res.status(401).send({message: 'Not authorized, token failed'})
+    return res.status(401).send({ messages: 'Not authorized, token failed' })
     return
   }
 }
@@ -26,6 +26,6 @@ export const admin = (req, res, next) => {
     next()
   } else {
     res.status(401)
-    throw new Error("Not authorized as an admin")
+    throw new Error('Not authorized as an admin')
   }
 }

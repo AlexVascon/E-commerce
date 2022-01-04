@@ -77,38 +77,40 @@ export default function Selection() {
 
   return (
     <View>
-      <Section
-        center
-        imageUrl={
-          process.env.PUBLIC_URL + gender === 'women' ? WomenImg : MenImg
-        }
-      >
-        <Categories>
-          <Choice
-            isActive={category === 'shirt'}
-            onClick={() => requestCategory('shirt')}
-          >
-            SHIRT
-          </Choice>
-          <Choice
-            isActive={category === 'jumper'}
-            onClick={() => requestCategory('jumper')}
-          >
-            JUMPER
-          </Choice>
-          <Choice
-            isActive={
-              (gender === 'men' && category === 'suit') ||
-              (gender === 'women' && category === 'dress')
-            }
-            onClick={() =>
-              requestCategory(gender === 'women' ? 'dress' : 'suit')
-            }
-          >
-            {gender === 'women' ? 'DRESS' : 'SUIT'}
-          </Choice>
-        </Categories>
-        <Indicator>Scroll down</Indicator>
+      <Section>
+        <Section
+          center
+          imageUrl={
+            process.env.PUBLIC_URL + gender === 'women' ? WomenImg : MenImg
+          }
+        >
+          <Categories>
+            <Choice
+              isActive={category === 'shirt'}
+              onClick={() => requestCategory('shirt')}
+            >
+              SHIRT
+            </Choice>
+            <Choice
+              isActive={category === 'jumper'}
+              onClick={() => requestCategory('jumper')}
+            >
+              JUMPER
+            </Choice>
+            <Choice
+              isActive={
+                (gender === 'men' && category === 'suit') ||
+                (gender === 'women' && category === 'dress')
+              }
+              onClick={() =>
+                requestCategory(gender === 'women' ? 'dress' : 'suit')
+              }
+            >
+              {gender === 'women' ? 'DRESS' : 'SUIT'}
+            </Choice>
+          </Categories>
+          <Indicator>Scroll down</Indicator>
+        </Section>
       </Section>
       <Section>
         <SelectionItems>

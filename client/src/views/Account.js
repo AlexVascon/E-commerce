@@ -24,7 +24,7 @@ export default function Account() {
   }, [userInfo])
 
   return (
-    <View responsive imageUrl={process.env.PUBLIC_URL + accountImg}>
+    <AccountView responsive imageUrl={process.env.PUBLIC_URL + accountImg}>
       <LinkText to='/shipping'>Shipping address</LinkText>
       <LinkText to='/cart'>Cart</LinkText>
       <LinkText to='/my-orders'>My orders</LinkText>
@@ -40,7 +40,7 @@ export default function Account() {
       >
         Logout
       </Text>
-    </View>
+    </AccountView>
   )
 }
 
@@ -77,4 +77,7 @@ const Text = styled.p`
   @media (min-width: 600px) {
     font-size: 1rem;
   }
+`
+const AccountView = styled(View)`
+  height: 100vh;
 `

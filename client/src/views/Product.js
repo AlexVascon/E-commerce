@@ -134,10 +134,10 @@ export default function Product() {
         <Name top='2%' left='5%' width='90%' z='3'>
           {foundProductInformation && foundProductInformation.title}
         </Name>
-        <Price as='p' bottom='15%' left='5%' width='3rem' z='2'>
+        <Price as='p' bottom='10%' left='5%' width='3rem' z='2'>
           ${foundProductInformation && foundProductInformation.price}
         </Price>
-        <ImageContainer bottom='15%' right='0%' z='1'>
+        <ImageContainer top='10%' right='0%' z='1'>
           <Image
             src={foundProductInformation && foundProductInformation.image}
           />
@@ -296,8 +296,11 @@ const ButtonContainer = styled.div`
   display: flex;
   flex: 1;
   padding-bottom: 2rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   button {
-    width: 25rem;
+    max-width: 25rem;
   }
 `
 const OpenButton = styled(ExpandCircleDownOutlinedIcon)`
@@ -396,6 +399,7 @@ const SimilarImage = styled.img`
 `
 
 const OutOfStock = styled(Button)`
+  text-align: center;
   background-color: transparent;
   box-shadow: none;
   &:hover {

@@ -95,7 +95,7 @@ const TopProductImage = styled.img`
 `
 const Image = styled.div`
   flex: 1;
-  height: 100%;
+  height: 60vh;
   background-image: url(${(props) => props.imageUrl});
   background-size: cover;
   background-repeat: no-repeat;

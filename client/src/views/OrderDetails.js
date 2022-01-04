@@ -155,14 +155,18 @@ export default function OrderDetails() {
   )
 }
 
-const Information = styled(List)`
-  margin-bottom: 10rem;
-  padding-bottom: 7rem;
+const Information = styled(List)``
+const Summary = styled(List)`
+  width: 90%;
 `
-const Summary = styled(List)``
-const Shipping = styled(List)``
-const PaymentMethod = styled(List)``
+const Shipping = styled(List)`
+  width: 90%;
+`
+const PaymentMethod = styled(List)`
+  width: 90%;
+`
 const Admin = styled(List)`
+  width: 90%;
   align-items: center;
 `
 const ItemsList = styled(List)`
@@ -171,6 +175,7 @@ const ItemsList = styled(List)`
 const Item = styled(Container)`
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
+  width: 90%;
 `
 
 const Name = styled(SubContainer)`
@@ -190,7 +195,7 @@ const Price = styled(SubContainer)`
 `
 const Confirm = styled(Button)`
   width: 10rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 `

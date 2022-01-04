@@ -23,6 +23,8 @@ import ProductList from './views/ProductList'
 import AdminRoute from './components/AdminRoute'
 import OrderList from './views/OrderList'
 import AccountList from './views/AccountList'
+import About from './views/About'
+import Footer from './components/Footer'
 
 export default function App() {
   return (
@@ -55,8 +57,10 @@ export default function App() {
         </Route>
         <Route path='/product/:productId' element={<Product />} />
         <Route path='/selection/:gender' element={<Selection />} />
+        <Route path='/about' element={<About />} />
         <Route path='/' element={<Home />} />
       </Routes>
+      <Footer />
     </AppContainer>
   )
 }

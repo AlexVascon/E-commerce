@@ -33,7 +33,7 @@ export const HoldImage = styled.div`
 export const SubContainer = styled.div`
   flex: ${(props) => props.flex};
   display: flex;
-  ${(props) => props.column && 'flex-direction: column'};
+  ${(props) => props.column && 'flex-direction: column;'};
   border-left: 1.8px solid rgba(204, 203, 203, 0.432);
   ${(props) => props.center && 'justify-content: center; align-items: center;'}
 `
@@ -49,16 +49,16 @@ export const Absolute = styled.p`
 export const View = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   ${(props) => props.center && 'justify-content: center; align-items: center;'}
-  overflow-y: scroll;
   background-image: url(${(props) => props.imageUrl});
   background-position-y: center;
   background-position-x: center;
   background-repeat: no-repeat;
   background-size: cover;
+  overflow-y: scroll;
   @media (min-width: 700px) {
     ${(props) => props.responsive && 'flex-direction: row;'}
     gap: ${(props) => props.gap};
@@ -66,8 +66,9 @@ export const View = styled.div`
 `
 export const Section = styled.div`
   position: relative;
+  flex: 1;
   width: 100%;
-  min-height: 100%;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   ${(props) => props.center && 'align-items: center; justify-content: center;'}
@@ -79,6 +80,7 @@ export const Section = styled.div`
   @media (min-width: 550px) {
     ${(props) => props.responsive && 'flex-direction: row;'}
     ${(props) => props.divider && 'border-left: 1px solid #CCC'}
+    min-height: 100vh;
   }
 `
 export const Heading = styled.h2`
@@ -87,20 +89,20 @@ export const Heading = styled.h2`
   margin-bottom: ${(props) => props.bottom && props.bottom};
   margin-top: ${(props) => props.top && props.top};
   margin-left: ${(props) => props.left && props.left};
+  margin-right: ${(props) => props.right && props.right};
   ${(props) => props.center && 'text-align: center;'}
   font-size: ${(props) => props.size};
   color: rgba(235, 198, 36, 0.945);
   @media (min-width: 550px) {
     ${(props) =>
       props.static &&
-      'position: absolute; left: 5%; top: -.5%; width: 100%; z-index: 2;'}
+      'position: absolute; left: 5%; top: 1%; width: 80%; z-index: 2;'}
   }
 `
 export const SubTitle = styled.h2`
   font-family: 'Playfair Display', serif;
   width: 100%;
   text-align: left;
-  padding-left: 1.5rem;
   font-weight: 700;
   color: rgba(235, 198, 36, 0.945);
   font-size: 1rem;
@@ -114,9 +116,12 @@ export const List = styled.ul`
   align-items: center;
   padding: 0;
   width: 100%;
-  max-height: 80vh;
-  ${(props) => props.scroll && 'overflow-y: scroll;'}
+  height: 100vh;
+  ${(props) => props.scroll && 'overflow-y: scroll; max-height: 90vh;'}
   gap: ${(props) => props.gap};
+  @media (max-width: 700) {
+    max-height: 90vh;
+  }
 `
 export const Row = styled.li`
   width: 90%;
@@ -134,7 +139,7 @@ export const RowText = styled.p`
   margin-bottom: 0.5rem;
 `
 export const Button = styled.button`
-  padding: 1rem;
+  padding: 1rem 0;
   border: none;
   font-weight: 600;
   border-radius: 0.3rem;

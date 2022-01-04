@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 export const Table = styled.table`
-width: 100%;
-border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
 `
 export const TR = styled.tr`
   &:nth-child(even) {
@@ -14,17 +14,17 @@ export const TH = styled.th`
   text-align: left;
   padding: 8px;
   overflow-wrap: break-word;
-  @media(max-width: 415px) {
-    font-size: .6rem;
-    width: ${props => props.width};
+  @media (max-width: 415px) {
+    font-size: 0.6rem;
+    width: ${(props) => props.width};
   }
 `
 export const TD = styled.td`
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
-  ${props => props.green && "background-color: RGB(98, 252, 144);"}
-  ${props => props.red && "background-color: RGB(255, 110, 110);"}
+  ${(props) => props.green && 'background-color: RGB(98, 252, 144);'}
+  ${(props) => props.red && 'background-color: RGB(255, 110, 110);'}
 `
 export const Button = styled.button`
   border: none;

@@ -131,8 +131,8 @@ export default function OrderDetails() {
             )}
         </Information>
       )}
+      <ItemSubTitle>Items</ItemSubTitle>
       <ItemsList scroll>
-        <SubTitle>Items</SubTitle>
         {foundOrder &&
           foundOrder.items.map((item) => (
             <Item width='90%' border key={item.itemId}>
@@ -171,6 +171,9 @@ const Admin = styled(List)`
 `
 const ItemsList = styled(List)`
   min-height: 100%;
+  @media (min-width: 600px) {
+    margin-top: 3rem;
+  }
 `
 const Item = styled(Container)`
   margin-bottom: 0.5rem;
@@ -198,4 +201,11 @@ const Confirm = styled(Button)`
   padding: 0.5rem 0;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+`
+const ItemSubTitle = styled(SubTitle)`
+  @media (min-width: 600px) {
+    position: absolute;
+    top: 1%;
+    left: 55%;
+  }
 `

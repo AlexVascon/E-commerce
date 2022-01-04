@@ -31,8 +31,8 @@ export default function About() {
         </a>
         <br />
         <LinkedInIcon />{' '}
-        <a href='https://www.linkedin.com/feed/'>
-          https://www.linkedin.com/feed/
+        <a href='https://www.linkedin.com/in/alex-vasconcelos-de-almeida/'>
+          https://www.linkedin.com/in/alex-vasconcelos-de-almeida/
         </a>
       </AboutContainer>
     </View>

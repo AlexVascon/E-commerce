@@ -59,8 +59,10 @@ export default function Cart() {
 
   return (
     <View responsive imageUrl={process.env.PUBLIC_URL + cartImg}>
+      <Heading static top='1%' left='5%' size='1rem'>
+        SHOPPING CART
+      </Heading>
       <CartItems scroll gap='0.7rem'>
-        <Heading size='1rem'>SHOPPING CART</Heading>
         {cartItems &&
           cartItems.map((item, index) => {
             return (
@@ -135,6 +137,7 @@ export default function Cart() {
 const CartItems = styled(List)`
   flex: 1.5;
   height: 90vh;
+  margin-top: 3rem;
   @media (max-width: 600px) {
     max-height: 60vh;
   }
@@ -168,8 +171,14 @@ const Price = styled.span`
 `
 const ButtonContainer = styled.div`
   flex: 0.5;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+  padding-top: 0;
+  text-align: center;
   button {
-    width: 25rem;
+    max-width: 25rem;
   }
 `
 const EditButton = styled.button`

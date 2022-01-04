@@ -130,29 +130,32 @@ export default function Product() {
       {fetchProductInformationError && (
         <Error>{fetchProductInformationError}</Error>
       )}
-      <Section imageUrl={process.env.PUBLIC_URL + productImg}>
-        <Name top='2%' left='5%' width='90%' z='3'>
-          {foundProductInformation && foundProductInformation.title}
-        </Name>
-        <Price as='p' bottom='10%' left='5%' width='3rem' z='2'>
-          ${foundProductInformation && foundProductInformation.price}
-        </Price>
-        <ImageContainer top='10%' right='0%' z='1'>
-          <Image
-            src={foundProductInformation && foundProductInformation.image}
-          />
-        </ImageContainer>
-        <ProductRating>
-          {foundProductInformation && (
-            <ReactStars
-              count={5}
-              value={foundProductInformation.rating}
-              size={24}
-              activeColor='#ffd700'
-              edit={false}
+      <Section>
+        {foundProductInformation && (
+          <Card>
+            <Rating as='span' width='10rem' top='1%' left='8%' z='6'>
+              <ReactStars
+                count={5}
+                value={foundProductInformation.rating || 0}
+                size={25}
+                activeColor='#ffd700'
+                edit={false}
+              />
+            </Rating>
+            <Image
+              as='img'
+              width='60%'
+              z='1'
+              src={foundProductInformation.image}
             />
-          )}
-        </ProductRating>
+            <Name as='b' width='90%' bottom='0%' left='5%' z='2'>
+              {foundProductInformation.title}
+            </Name>
+            <Price as='span' width='20%' top='7%' left='5%'>
+              ${foundProductInformation.price}
+            </Price>
+          </Card>
+        )}
       </Section>
       <Section divider>
         <Information>
@@ -291,6 +294,59 @@ export default function Product() {
   )
 }
 
+const Card = styled.div`
+  background-image: url(${productImg});
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-y: center;
+  background-position-x: center;
+  width: 95%;
+  height: 90vh;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  margin: 1rem 0.4rem;
+  border-radius: 0.5rem;
+  position: relative;
+  z-index: 4;
+
+  @media (min-width: 450px) {
+  }
+  @media (min-width: 550px) {
+    margin: 1rem;
+  }
+  @media (min-width: 750px) {
+    margin: 1rem;
+  }
+`
+const Name = styled(Absolute)`
+  font-size: 3rem;
+  font-family: 'Roboto', sans-serif;
+  overflow-wrap: break-word;
+  line-height: 2.7rem;
+  color: rgb(207, 159, 0);
+`
+const Price = styled(Absolute)`
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.2rem 0.8rem;
+  color: white;
+  border-radius: 2rem;
+  background-color: rgba(82, 81, 81, 0.788);
+`
+const Image = styled(Absolute)`
+  height: 100%;
+  align-self: flex-end;
+  padding: 0;
+  margin: 0;
+  z-index: 1;
+  background-color: transparent;
+`
+const Rating = styled(Absolute)``
+
+// ---  --
+
 const ButtonContainer = styled.div`
   margin: auto;
   display: flex;
@@ -325,24 +381,6 @@ const DescriptionContainer = styled(DropDownContainer)``
 
 const Reviews = styled(List)``
 
-const Name = styled(Absolute)`
-  font-size: 4rem;
-  font-family: 'Mukta', sans-serif;
-  font-weight: 700;
-  overflow-wrap: break-word;
-  color: rgb(214, 175, 1);
-  line-height: 3.3rem;
-`
-const Price = styled(Absolute)`
-  padding: 0.5rem 0.8rem;
-  border-radius: 1rem;
-  font-family: 'Roboto', sans-serif;
-  overflow-wrap: break-word;
-  color: white;
-  background-color: rgba(94, 94, 94, 0.945);
-`
-const Image = styled.img``
-const ImageContainer = styled(Absolute)``
 const Information = styled(List)`
   flex: 1.2;
   margin: auto;
@@ -351,12 +389,6 @@ const Information = styled(List)`
 `
 const Description = styled.p``
 
-const ProductRating = styled.div`
-  position: absolute;
-  top: 5%;
-  left: 7%;
-  z-index: 2;
-`
 const ReviewForm = styled(Form)`
   padding: 1rem;
   justify-content: center;

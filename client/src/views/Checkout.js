@@ -48,7 +48,7 @@ export default function Checkout() {
 
   return (
     <View responsive>
-      <Heading static top='1%' bottom='0%' left='5%'>
+      <Heading static top='0%' left='5%'>
         Chekout
       </Heading>
       {createOrderLoading && <LoadingSpinner />}
